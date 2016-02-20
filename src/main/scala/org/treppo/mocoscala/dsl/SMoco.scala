@@ -174,13 +174,13 @@ class SMoco(port: Int = 8080) {
     this.rules = rule :: this.rules
   }
 
-  private def startServer = {
+  private def startServer: MocoHttpServer = {
     val theServer = new MocoHttpServer(replay)
     theServer.start()
     theServer
   }
 
-  private def replay = {
+  private def replay: ActualHttpServer = {
     val server = confs match {
       case confs: Seq[MocoConfig[_]] => Moco.httpServer(port, confs: _*).asInstanceOf[ActualHttpServer]
       case _ => Moco.httpServer(port).asInstanceOf[ActualHttpServer]
