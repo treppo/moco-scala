@@ -1,24 +1,24 @@
 package com.github.nicholasren.moco.dsl
 
-import com.github.dreamhead.moco.resource.{ContentResource, Resource}
+import java.util.concurrent.TimeUnit
+
 import com.github.dreamhead.moco._
-import com.github.dreamhead.moco.handler.{SequenceContentHandler, AndResponseHandler}
-import com.github.nicholasren.moco.wrapper.{Rule, PartialRule, ExtractorMatcher}
-import scala.collection.JavaConversions._
-import com.github.dreamhead.moco.internal.{MocoHttpServer, ActualHttpServer}
-import com.github.dreamhead.moco.extractor.{FormRequestExtractor, ContentRequestExtractor, UriRequestExtractor}
-import com.google.common.collect.ImmutableList
-import Conversions._
 import com.github.dreamhead.moco.config.{MocoContextConfig, MocoFileRootConfig}
-import com.github.dreamhead.moco.handler.proxy.ProxyConfig
+import com.github.dreamhead.moco.extractor.{ContentRequestExtractor, UriRequestExtractor}
 import com.github.dreamhead.moco.handler.failover.Failover
-import io.netty.handler.codec.http.HttpResponseStatus
-import com.google.common.net.HttpHeaders
-import scala.concurrent.duration.Duration
+import com.github.dreamhead.moco.handler.proxy.ProxyConfig
+import com.github.dreamhead.moco.handler.{AndResponseHandler, SequenceContentHandler}
+import com.github.dreamhead.moco.internal.{ActualHttpServer, MocoHttpServer}
 import com.github.dreamhead.moco.procedure.LatencyProcedure
-import scala.Some
-import com.github.nicholasren.moco.dsl.Conversions.CompositeMocoConfig
-import com.github.nicholasren.moco.wrapper.ExtractorMatcher
+import com.github.dreamhead.moco.resource.{ContentResource, Resource}
+import com.github.nicholasren.moco.dsl.Conversions.{CompositeMocoConfig, _}
+import com.github.nicholasren.moco.wrapper.{ExtractorMatcher, PartialRule, Rule}
+import com.google.common.collect.ImmutableList
+import com.google.common.net.HttpHeaders
+import io.netty.handler.codec.http.HttpResponseStatus
+
+import scala.collection.JavaConversions._
+import scala.concurrent.duration.Duration
 
 object SMoco {
 
@@ -74,7 +74,7 @@ object SMoco {
   //request matcher - end
 
   // procedure - start
-  def latency(duration: Duration): LatencyProcedure = Moco.latency(duration.toMillis)
+  def latency(duration: Duration): LatencyProcedure = Moco.latency(duration.toMillis, TimeUnit.MILLISECONDS)
   // procedure - end
 
   //response handlers - start
@@ -176,14 +176,14 @@ class SMoco(port: Int = 8080) {
 
   private def startServer = {
     val theServer = new MocoHttpServer(replay)
-    theServer.start
+    theServer.start()
     theServer
   }
 
   private def replay = {
     val server = confs match {
-      case confs: Seq[MocoConfig[_]] => com.github.dreamhead.moco.Moco.httpserver(port, confs: _*).asInstanceOf[ActualHttpServer]
-      case _ => com.github.dreamhead.moco.Moco.httpserver(port).asInstanceOf[ActualHttpServer]
+      case confs: Seq[MocoConfig[_]] => Moco.httpServer(port, confs: _*).asInstanceOf[ActualHttpServer]
+      case _ => Moco.httpServer(port).asInstanceOf[ActualHttpServer]
     }
 
     rules.foreach {
@@ -194,7 +194,7 @@ class SMoco(port: Int = 8080) {
         }
     }
 
-    triggers.foreach(server.on(_))
+    triggers.foreach(server.on)
 
     server
   }
