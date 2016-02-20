@@ -22,16 +22,11 @@ import scala.concurrent.duration.Duration
 
 object SMoco {
 
-  //configs - start
   def fileRoot(path: String): MocoConfig[_] = new MocoFileRootConfig(path)
 
   def context(context: String): MocoConfig[_] = new MocoContextConfig(context)
-  //configs - end
 
-  //server
   def server(port: Int): SMoco = new SMoco(port)
-
-  //resources - start
 
   def uri(value: String): Resource = Moco.uri(value)
 
@@ -44,10 +39,6 @@ object SMoco {
   def file(filename: String): Resource = Moco.file(filename)
 
   def version(value: String): Resource = Moco.version(value)
-
-  //resources - end
-
-  //extractor matcher - start
 
   def header(name: String): ExtractorMatcher = new ExtractorMatcher(Moco.header(name))
 
@@ -65,19 +56,12 @@ object SMoco {
 
   def jsonPath(path: String): ExtractorMatcher = new ExtractorMatcher(Moco.jsonPath(path))
 
-  //extractor matcher - end
-
-  //request matcher - start
   def xml(content: Resource): RequestMatcher = Moco.xml(content)
 
   def json(content: Resource): RequestMatcher = Moco.json(content)
-  //request matcher - end
 
-  // procedure - start
   def latency(duration: Duration): LatencyProcedure = Moco.latency(duration.toMillis, TimeUnit.MILLISECONDS)
-  // procedure - end
 
-  //response handlers - start
   def status(code: Int): ResponseHandler = Moco.status(code)
 
   def attachment(filename: String, resource: Resource) = Moco.attachment(filename, resource)
@@ -93,24 +77,16 @@ object SMoco {
   }
 
   def headers(headers: (String, String)*): ResponseHandler = {
-    val handlers = headers.map {
-      header =>
-        Moco.header(header._1, header._2)
-    }
+    val handlers = headers.map { case (name, value) => Moco.header(name, value) }
     new AndResponseHandler(handlers)
   }
 
   def cookies(cookies: (String, String)*): ResponseHandler = {
-    val handlers = cookies.map {
-      cookie =>
-        Moco.cookie(cookie._1, cookie._2)
-    }
+    val handlers = cookies.map { case (name, value) => Moco.cookie(name, value) }
     new AndResponseHandler(handlers)
   }
-  //response handlers - end
 
-  //proxy - start
-  def proxy(url: String)(implicit failover : Failover) = Moco.proxy(url, failover)
+  def proxy(url: String)(implicit failover: Failover) = Moco.proxy(url, failover)
 
   def proxy(config: => ProxyConfig) = Moco.proxy(config)
 
@@ -119,13 +95,9 @@ object SMoco {
   def playback(filename: String): Failover = Moco.playback(filename)
 
   def from(localBase: String) = Moco.from(localBase)
-  //proxy - end
 
-  //trigger - start
   def complete(action: MocoEventAction): MocoEventTrigger = Moco.complete(action)
-  //trigger - end
 
-  //event action - start
   def async(action: MocoEventAction): MocoEventAction = Moco.async(action)
 
   def async(action: MocoEventAction, duration: Duration): MocoEventAction = Moco.async(action, latency(duration))
@@ -133,7 +105,6 @@ object SMoco {
   def get(url: String) = Moco.get(url)
 
   def post(url: String, content: ContentResource) = Moco.post(url, content)
-  //event action - end
 }
 
 
@@ -145,8 +116,7 @@ class SMoco(port: Int = 8080) {
 
   var rules: List[Rule] = List()
 
-  def running(testFun: => Unit) = {
-
+  def running[T](testFun: => T): T = {
     val theServer = startServer
     try {
       testFun
