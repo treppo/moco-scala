@@ -4,7 +4,7 @@ moco-scala
 This is a scala wrapper for [moco](https://github.com/dreamhead/moco).
 The purpose of this project is to leverage scala's elegant syntax to provide beautiful DSL for using moco in scala testing.
 
-[![Build Status](https://travis-ci.org/nicholasren/moco-scala.svg?branch=master)](https://travis-ci.org/nicholasren/moco-scala)
+[![Build Status](https://travis-ci.org/treppo/moco-scala.svg?branch=master)](https://travis-ci.org/nicholasren/moco-scala)
 
 ### How to use
 
@@ -21,26 +21,22 @@ resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repos
 ```
 
 ### Quick Start
-
-#### Import dependencies
 ```scala
-import org.treppo.moco.dsl.SMoco._
-```
+// Import dependencies
+import org.treppo.mocoscala.dsl.SMoco._
+import org.treppo.mocoscala.dsl.Conversions._
 
-#### Create server
-```scala
+// Create server
 val theServer = server(8080)
-```
 
-#### Record behaviour
-```scala
-theServer when { uri("/hello") } then { status(200) }
-```
+// Record behaviour
+theServer when { uri("/hello") } respond { status(200) }
 
-#### Running server and test your stuff
-```scala
+// Running server and test your stuff
 theServer running  {
-    assert(getForStatus(remoteUrl("/hello")) === 200)
+  import org.treppo.mocoscala.helper.RemoteTestHelper
+
+  assert(getForStatus(remoteUrl("/hello")) === 200)
 }
 ```
 

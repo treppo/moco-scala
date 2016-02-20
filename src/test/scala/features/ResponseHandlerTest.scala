@@ -38,11 +38,11 @@ class ResponseHandlerTest extends FunSpec with BeforeAndAfter with RemoteTestHel
 
       theServer when {
         uri("/")
-      } then {
+      } respond {
         text("foo")
       } when {
         uri("/redirect")
-      } then {
+      } respond {
         redirectTo("/")
       }
 
@@ -76,7 +76,7 @@ class ResponseHandlerTest extends FunSpec with BeforeAndAfter with RemoteTestHel
     it("send text") {
       theServer when {
         method("get")
-      } then {
+      } respond {
         text("get")
       }
 
@@ -89,7 +89,7 @@ class ResponseHandlerTest extends FunSpec with BeforeAndAfter with RemoteTestHel
     it("send headers") {
       theServer when {
         method("get")
-      } then {
+      } respond {
         headers("Content-Type" -> "json", "Accept" -> "html")
       }
 
@@ -103,7 +103,7 @@ class ResponseHandlerTest extends FunSpec with BeforeAndAfter with RemoteTestHel
     it("send content in seq") {
       theServer when {
         method("get")
-      } then {
+      } respond {
         seq("foo", "bar", "baz")
       }
 
@@ -118,7 +118,7 @@ class ResponseHandlerTest extends FunSpec with BeforeAndAfter with RemoteTestHel
     it("send multi response handler") {
       theServer when {
         method("get")
-      } then {
+      } respond {
         status(201) and text("hello")
       }
 
@@ -132,7 +132,7 @@ class ResponseHandlerTest extends FunSpec with BeforeAndAfter with RemoteTestHel
     it("send version") {
       theServer when {
         method("get")
-      } then {
+      } respond {
         version("HTTP/1.0")
       }
 

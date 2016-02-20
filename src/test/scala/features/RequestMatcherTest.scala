@@ -22,7 +22,7 @@ class RequestMatcherTest extends FunSpec with BeforeAndAfter with RemoteTestHelp
     it("match by uri") {
       theServer when {
         uri("/hello") and method("post")
-      } then {
+      } respond {
         status(200) and text("world")
       }
 
@@ -36,7 +36,7 @@ class RequestMatcherTest extends FunSpec with BeforeAndAfter with RemoteTestHelp
     it("match uri by regex") {
       theServer when {
         uri matched "/hello.+"
-      } then {
+      } respond {
         text("world")
       }
 
@@ -50,7 +50,7 @@ class RequestMatcherTest extends FunSpec with BeforeAndAfter with RemoteTestHelp
     it("match by query parameters") {
       theServer when {
         query("foo") === "bar"
-      } then {
+      } respond {
         text("bar")
       }
 
@@ -63,7 +63,7 @@ class RequestMatcherTest extends FunSpec with BeforeAndAfter with RemoteTestHelp
     it("match header by regex") {
       theServer when {
         header("Content-Type") matched ".+json"
-      } then {
+      } respond {
         text("headers matched")
       }
 
@@ -77,7 +77,7 @@ class RequestMatcherTest extends FunSpec with BeforeAndAfter with RemoteTestHelp
     it("match text by regex") {
       theServer when {
         text matched "hello.+"
-      } then {
+      } respond {
         text("text matched")
       }
 
@@ -91,7 +91,7 @@ class RequestMatcherTest extends FunSpec with BeforeAndAfter with RemoteTestHelp
     it("match by method") {
       theServer when {
         method("get")
-      } then {
+      } respond {
         text("get")
       }
 
@@ -104,7 +104,7 @@ class RequestMatcherTest extends FunSpec with BeforeAndAfter with RemoteTestHelp
     it("match by headers") {
       theServer when {
         header("Content-Type") === "content-type"
-      } then {
+      } respond {
         text("headers matched")
       }
 
@@ -116,7 +116,7 @@ class RequestMatcherTest extends FunSpec with BeforeAndAfter with RemoteTestHelp
     it("match by version") {
       theServer when {
         version("HTTP/1.0")
-      } then {
+      } respond {
         text("version matched")
       }
 
@@ -130,7 +130,7 @@ class RequestMatcherTest extends FunSpec with BeforeAndAfter with RemoteTestHelp
         cookies("foo" -> "bar") and status(302)
       } when {
         cookie("foo") === "bar"
-      } then {
+      } respond {
         status(200)
       }
 
@@ -143,7 +143,7 @@ class RequestMatcherTest extends FunSpec with BeforeAndAfter with RemoteTestHelp
     it("match by form") {
       theServer when {
         form("foo") === "bar"
-      } then {
+      } respond {
         text("bar")
       }
 
@@ -156,11 +156,11 @@ class RequestMatcherTest extends FunSpec with BeforeAndAfter with RemoteTestHelp
     it("can define multi matchers") {
       theServer when {
         method("get")
-      } then {
+      } respond {
         text("get")
       } when {
         method("post")
-      } then {
+      } respond {
         text("post")
       }
 

@@ -3,7 +3,7 @@ There are three important concepts in this wrapper: __request matcher__, __respo
 
 __Request matcher:__ sits in the *when* clause, used to match against requests that server received, once request matched, moco server will respond.
 
-__Response handler:__ sits in the *then* clause, used to define which should be responded to client once request matched.
+__Response handler:__ sits in the *respond* clause, used to define which should be responded to client once request matched.
 
 __Resource:__  Any thing which can be matched against or any thing which can be send back to client could be considered as a resource.
 
@@ -177,14 +177,14 @@ similar to xpath.
 #####Text
 
 ```scala
-then {
+respond {
     text("foo")
 }
 ```
 
 #####File
 ```scala
-then {
+respond {
     file("foo.req")
 }
 ```
@@ -192,7 +192,7 @@ then {
 #####Header
 
 ```scala
-then {
+respond {
     headers("Content-Type" -> "json", "Accept" -> "html")
 }
 ```
@@ -200,7 +200,7 @@ then {
 #####Cookie
 
 ```scala
-then {
+respond {
     cookie("foo" -> "bar")
 }
 ```
@@ -208,14 +208,14 @@ then {
 ##### Status
 
 ```scala
-then {
+respond {
     status 200
 }
 ```
 ##### Version
 
 ```scala
-then {
+respond {
     version("HTTP/1.0")
 }
 ```
@@ -227,7 +227,7 @@ then {
 We can response with a specified url, just like a proxy.
 
 ```scala
-then {
+respond {
   proxy("http://example.com")
 }
 ```
@@ -235,7 +235,7 @@ then {
 Proxy also support failover
 
 ```scala
-then {
+respond {
   proxy("http://example.com") {
     failover("failover.json")
   }
@@ -245,7 +245,7 @@ then {
 #####Playback
 We also supports playback with save remote request and resonse into local file.
 ```scala
-then {
+respond {
   proxy("http://example.com") {
     playback("playback.json")
   }
@@ -257,7 +257,7 @@ Proxy also support proxying a batch of URLs in the same context
 ```scala
 when {
   method("GET") and uri matched "/proxy/.*"
-} then {
+} respond {
   proxy {
     from("/proxy") to ("http://localhost:9090/target")
   }
@@ -271,7 +271,7 @@ You can simply redirect a request to a different location:
 ```scala
 when {
   uri("/redirect")
-} then {
+} respond {
   redirectTo("/target")
 }
 ```
@@ -279,7 +279,7 @@ when {
 #####Attachment
 You can setup a attachment as response
 ```scala
-then {
+respond {
   attachment("filename", file("filepath"))
 }
 ```
@@ -287,7 +287,7 @@ then {
 #####Latency
 You can simulate a slow response:
 ```scala
-then {
+respond {
   //you need to import scala.concurrent.duration.Duration to have this syntax sugar
   latency(2 seconds)
 }
@@ -296,7 +296,7 @@ then {
 #####Sequence
 You can simulate a sequence of response:
 ```scala
-then {
+respond {
   seq("foo", "bar", "blah")
 }
 ```
@@ -339,7 +339,7 @@ import com.github.nicholasren.moco.dsl.Conversions._
 ```scala
 when {
   uri("/hello") and method("post")
-} then {
+} respond {
   text("world")
 }
 
@@ -348,7 +348,7 @@ when {
 ```scala
 when {
   uri("/not-exits")
-} then {
+} respond {
   status(400) and text("BAD REQUEST")
 }
 
@@ -359,11 +359,11 @@ when {
 ```scala
 when {
   method("get")
-} then {
+} respond {
   text("get")
 } when {
   method("post")
-} then {
+} respond {
   text("post")
 }
 ```
