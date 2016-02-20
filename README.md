@@ -8,23 +8,23 @@ The purpose of this project is to leverage scala's elegant syntax to provide bea
 
 ### How to use
 
-__Add dependency:__
+#### Add dependency
 ```sbt
-libraryDependencies += "com.github.nicholasren" %% "moco-scala" % "0.3"
+libraryDependencies += "org.treppo" %% "moco-scala" % "0.3"
 ```
-__Try latest version:__
 
-if you want to try latest version, just add snapshot repo to dependency resolver
+#### Try latest version
+If you want to try latest version, just add snapshot repo to dependency resolver
 
-```scala
+```sbt
 resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
 ```
 
-###Quick Start:
+### Quick Start
 
 #### Import dependencies
 ```scala
-import com.github.nicholasren.moco.scala.dsl.SMoco._
+import org.treppo.moco.dsl.SMoco._
 ```
 
 #### Create server
@@ -38,17 +38,16 @@ theServer when { uri("/hello") } then { status(200) }
 ```
 
 #### Running server and test your stuff
-
 ```scala
 theServer running  {
     assert(getForStatus(remoteUrl("/hello")) === 200)
 }
 ```
 
-###Document
-api document can be found [here.](doc/api.md)
+### Document
+Api documentation can be found [here.](doc/api.md)
 
-also, please refer to [functional tests](https://github.com/nicholasren/moco-scala/tree/master/src/test/scala/features) for detail usage.
+Also, please refer to [functional tests](https://github.com/nicholasren/moco-scala/tree/master/src/test/scala/features) for detail usage.
 
 ### Contribution:
-This project is still in process, any question and suggestion are more than welcomed.
+This project is still in process, any question or suggestion is more than welcome.
