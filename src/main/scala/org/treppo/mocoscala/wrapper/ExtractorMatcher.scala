@@ -12,7 +12,7 @@ case class ExtractorMatcher(extractor: RequestExtractor[_ <: Any]) {
 
   def matched(expected: String): RequestMatcher = Moco.`match`(extractor, expected)
 
-  def contain(expected: String): RequestMatcher = Moco.contain(extractor, expected)
+  def contains(expected: String): RequestMatcher = Moco.contain(extractor, expected)
 
   def startsWith(prefix: String): RequestMatcher = Moco.startsWith(extractor, prefix)
 

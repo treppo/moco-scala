@@ -5,15 +5,13 @@ import org.treppo.mocoscala.dsl.Conversions._
 import org.treppo.mocoscala.dsl.SMoco._
 import org.treppo.mocoscala.helper.RemoteTestHelper
 
-class ConfigTest extends FeatureSpec
-with GivenWhenThen with BeforeAndAfter
-with RemoteTestHelper {
+class ConfigTest extends FeatureSpec with GivenWhenThen with BeforeAndAfter with RemoteTestHelper {
 
   info("As a api consumer")
-  info("I want to be able to config my mock server")
-  info("So I these configs can be shared by all examples")
+  info("I want to be able to configure my mock server")
+  info("So these configs can be shared by all examples")
 
-  val port = 8082
+  override val port = 8082
 
   feature("config file root") {
 
@@ -35,7 +33,7 @@ with RemoteTestHelper {
 
       Then("The response file should be served under configured file root")
       theServer running {
-        assert(get(remoteUrl("/")) === "bar")
+        assert(get === "bar")
       }
     }
   }
@@ -59,7 +57,7 @@ with RemoteTestHelper {
 
       Then("The response should be served under configured context")
       theServer running {
-        assert(get(remoteUrl("/hello")) === "world")
+        assert(get("/hello") === "world")
       }
     }
   }

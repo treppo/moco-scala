@@ -2,25 +2,20 @@ package features
 
 import com.github.dreamhead.moco.MocoEventAction
 import org.mockito.Mockito._
+import org.scalatest.FunSpec
 import org.scalatest.mock.MockitoSugar
-import org.scalatest.{BeforeAndAfter, FunSpec}
 import org.treppo.mocoscala.dsl.Conversions._
-import org.treppo.mocoscala.dsl.SMoco
 import org.treppo.mocoscala.dsl.SMoco._
 import org.treppo.mocoscala.helper.RemoteTestHelper
 
-class EventActionTest extends FunSpec with BeforeAndAfter with RemoteTestHelper with MockitoSugar {
-  override val port: Int = 8083
+class EventActionTest extends FunSpec with RemoteTestHelper with MockitoSugar {
 
-  var theServer: SMoco = null
-
-  before {
-    theServer = server(port)
-  }
+  override val port = 8083
 
   describe("on complete") {
 
     it("perform predefined action") {
+      val theServer = server(port)
 
       val action = mock[MocoEventAction]
 
@@ -31,7 +26,7 @@ class EventActionTest extends FunSpec with BeforeAndAfter with RemoteTestHelper 
       }
 
       theServer running {
-        assert(get(root) === "foo")
+        assert(get === "foo")
       }
 
       verify(action).execute()

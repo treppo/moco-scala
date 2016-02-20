@@ -3,7 +3,6 @@ package features
 import org.apache.http.HttpVersion
 import org.scalatest.{BeforeAndAfter, FunSpec}
 import org.treppo.mocoscala.dsl.Conversions._
-import org.treppo.mocoscala.dsl.SMoco
 import org.treppo.mocoscala.dsl.SMoco._
 import org.treppo.mocoscala.helper.RemoteTestHelper
 
@@ -11,13 +10,9 @@ class RequestMatcherTest extends FunSpec with BeforeAndAfter with RemoteTestHelp
 
   val port = 8081
 
-  var theServer: SMoco = null
-
-  before {
-    theServer = server(port)
-  }
-
   describe("matchers") {
+
+    val theServer = server(port)
 
     it("match by uri") {
       theServer when {
@@ -26,10 +21,9 @@ class RequestMatcherTest extends FunSpec with BeforeAndAfter with RemoteTestHelp
         status(200) and text("world")
       }
 
-
       theServer running {
-        assert(getForStatus(remoteUrl("/hello")) === 400)
-        assert(post(remoteUrl("/hello"), "") === "world")
+        assert(getForStatus("/hello") === 400)
+        assert(post("/hello", "") === "world")
       }
     }
 
@@ -40,10 +34,9 @@ class RequestMatcherTest extends FunSpec with BeforeAndAfter with RemoteTestHelp
         text("world")
       }
 
-
       theServer running {
-        assert(get(remoteUrl("/hello123")) === "world")
-        assert(get(remoteUrl("/hello-abc")) === "world")
+        assert(get("/hello123") === "world")
+        assert(get("/hello-abc") === "world")
       }
     }
 
@@ -55,7 +48,7 @@ class RequestMatcherTest extends FunSpec with BeforeAndAfter with RemoteTestHelp
       }
 
       theServer running {
-        assert(get(remoteUrl("/hello?foo=bar")) === "bar")
+        assert(get("/hello?foo=bar") === "bar")
       }
 
     }
@@ -66,7 +59,6 @@ class RequestMatcherTest extends FunSpec with BeforeAndAfter with RemoteTestHelp
       } respond {
         text("headers matched")
       }
-
 
       theServer running {
         assert(getWithHeaders("Content-Type" -> "application/json") === "headers matched")
@@ -82,8 +74,8 @@ class RequestMatcherTest extends FunSpec with BeforeAndAfter with RemoteTestHelp
       }
 
       theServer running {
-        assert(post(root, "hello-abc") === "text matched")
-        assert(post(root, "hello-123") === "text matched")
+        assert(post("hello-abc") === "text matched")
+        assert(post("hello-123") === "text matched")
       }
 
     }
@@ -95,9 +87,8 @@ class RequestMatcherTest extends FunSpec with BeforeAndAfter with RemoteTestHelp
         text("get")
       }
 
-
       theServer running {
-        assert(get(root) === "get")
+        assert(get === "get")
       }
     }
 
@@ -121,22 +112,19 @@ class RequestMatcherTest extends FunSpec with BeforeAndAfter with RemoteTestHelp
       }
 
       theServer running {
-        assert(getWithVersion(root, HttpVersion.HTTP_1_0) === "version matched")
+        assert(getWithVersion(HttpVersion.HTTP_1_0) === "version matched")
       }
     }
 
     it("match by cookie") {
-      theServer default {
-        cookies("foo" -> "bar") and status(302)
-      } when {
+      theServer when {
         cookie("foo") === "bar"
       } respond {
-        status(200)
+        status(400)
       }
 
       theServer running {
-        assert(getForStatus(root) === 302)
-        assert(getForStatus(root) === 200)
+        assert(getForStatusWithCookie(("foo", "bar")) === 400)
       }
     }
 
@@ -148,9 +136,8 @@ class RequestMatcherTest extends FunSpec with BeforeAndAfter with RemoteTestHelp
       }
 
       theServer running {
-        assert(post(root, "foo" -> "bar") === "bar")
+        assert(postForm("foo" -> "bar") === "bar")
       }
-
     }
 
     it("can define multi matchers") {
@@ -165,8 +152,8 @@ class RequestMatcherTest extends FunSpec with BeforeAndAfter with RemoteTestHelp
       }
 
       theServer running {
-        assert(get(root) === "get")
-        assert(post(root, "") === "post")
+        assert(get === "get")
+        assert(post("") === "post")
       }
     }
   }

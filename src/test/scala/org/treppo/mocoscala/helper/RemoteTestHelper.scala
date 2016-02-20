@@ -1,77 +1,67 @@
 package org.treppo.mocoscala.helper
 
-import org.apache.http.HttpVersion
+import org.apache.http.{ProtocolVersion, HttpVersion}
 import org.apache.http.client.fluent.Request
 import org.apache.http.message.BasicNameValuePair
 
 trait RemoteTestHelper {
 
   val port: Int
+  private lazy val root = s"http://localhost:$port"
 
-  def get(uri: String): String = {
-    Request.Get(uri).execute().returnContent().asString
-  }
+  def get: String = content(Request.Get(root))
 
-  def post(uri: String, content: String): String = {
-    postBytes(uri, content.getBytes())
-  }
+  def get(uri: String): String = content(Request.Get(root + uri))
 
-  def post(uri: String, form: (String, String)) = {
-    Request.Post(uri).bodyForm(new BasicNameValuePair(form._1, form._2)).execute.returnContent.asString
-  }
+  def post(body: String): String = postBody(root, body)
 
-  def put(uri: String) = {
-    Request.Put(uri).execute().returnContent().toString()
-  }
+  def post(uri: String, body: String): String =
+    postBody(root + uri, body)
 
-  def delete(uri: String) = {
-    Request.Delete(uri).execute().returnContent().toString()
-  }
+  def postForm(form: (String, String)) =
+    content(Request.Post(root).bodyForm(new BasicNameValuePair(form._1, form._2)))
 
-  def postBytes(uri: String, bytes: Array[Byte]) = {
-    Request.Post(uri).bodyByteArray(bytes)
-      .execute().returnContent().asString();
-  }
+  def put(uri: String) = content(Request.Put(uri))
 
-  def getForStatus(uri: String) = {
-    Request.Get(uri).execute().returnResponse().getStatusLine.getStatusCode
-  }
+  def delete(uri: String) = content(Request.Delete(uri))
+
+  def getForStatus = status(Request.Get(root))
+
+  def getForStatus(uri: String) = status(Request.Get(root + uri))
 
   def getWithHeaders(headers: (String, String)*) = {
-    val get: Request = Request.Get(root)
+    val get = Request.Get(root)
+    headers.foreach { case (name, value) => get.addHeader(name, value) }
+    content(get)
+  }
 
-    headers.foreach {
-      header =>
-        get.addHeader(header._1, header._2)
-    }
-
-    get.execute().returnContent().asString
+  def getForStatusWithCookie(cookie: (String, String)) = cookie match {
+    case (name, value) => status(Request.Get(root).addHeader("Cookie", s"$name=$value"))
   }
 
   def getForStatusWithHeaders(headers: (String, String)*) = {
-    val get: Request = Request.Get(root)
-
-    headers.foreach {
-      header =>
-        get.addHeader(header._1, header._2)
-    }
-
-    get.execute.returnResponse.getStatusLine.getStatusCode
+    val get = Request.Get(root)
+    headers.foreach { case (name, value) => get.addHeader(name, value) }
+    status(get)
   }
 
   def getForHeader(headerName: String): String = {
     Request.Get(root).execute.returnResponse.getFirstHeader(headerName).getValue
   }
 
-  def getWithVersion(url: String, version: HttpVersion) = get(Request.Get(url).version(version))
+  def getWithVersion(version: HttpVersion): String =
+    Request.Get(root).version(version).execute.returnContent.asString
 
+  def getForVersion: ProtocolVersion =
+    Request.Get(root).execute.returnResponse.getProtocolVersion
 
-  def root: String = {
-    s"http://localhost:$port"
+  private def content(request: Request): String =
+    request.execute().returnContent().asString
+
+  private def postBody(uri: String, body: String) =
+    Request.Post(uri).bodyByteArray(body.getBytes).execute().returnContent().asString()
+
+  private def status(request: Request): Int = {
+    request.execute.returnResponse.getStatusLine.getStatusCode
   }
-
-  def remoteUrl(uri: String) = root + uri
-
-  private
-  def get(request: Request): String = request.execute.returnContent.asString
 }

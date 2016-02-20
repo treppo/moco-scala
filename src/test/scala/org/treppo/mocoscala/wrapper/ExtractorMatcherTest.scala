@@ -14,7 +14,7 @@ class ExtractorMatcherTest extends FlatSpec {
   }
 
   "a extractor matcher" should "be able to do contain match" in {
-    (matcher contain "wor") shouldBe a[ContainMatcher[_]]
+    (matcher contains "wor") shouldBe a[ContainMatcher[_]]
   }
 
   "a extractor matcher" should "be able to do startsWith match" in {
@@ -22,7 +22,7 @@ class ExtractorMatcherTest extends FlatSpec {
   }
 
   "a extractor matcher" should "be able to do endsWith match" in {
-    (matcher endsWith "hell") shouldBe a[EndsWithMatcher[_]]
+    (matcher endsWith "olrd") shouldBe a[EndsWithMatcher[_]]
   }
 
 }

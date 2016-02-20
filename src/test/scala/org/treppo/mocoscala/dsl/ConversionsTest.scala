@@ -19,12 +19,13 @@ class ConversionsTest extends FlatSpec with MockitoSugar {
 
   "a moco config" should "convert to a composite config" in {
     val configs: CompositeMocoConfig = mock[MocoConfig[_]]
+
     configs shouldBe a [CompositeMocoConfig]
   }
 
   "a procedure" should "convert to a response handler" in {
     val procedure: ResponseHandler = mock[MocoProcedure]
-    procedure shouldBe a [ResponseHandler]
 
+    procedure shouldBe a [ResponseHandler]
   }
 }

@@ -28,7 +28,7 @@ class ResponseHandlerTest extends FunSpec with BeforeAndAfter with RemoteTestHel
       }
 
       theServer running {
-        assert(get(root) === "default")
+        assert(get === "default")
       }
     }
   }
@@ -47,7 +47,7 @@ class ResponseHandlerTest extends FunSpec with BeforeAndAfter with RemoteTestHel
       }
 
       theServer running {
-        assert(get(remoteUrl("/redirect")) === "foo")
+        assert(get("/redirect") === "foo")
       }
     }
   }
@@ -64,7 +64,7 @@ class ResponseHandlerTest extends FunSpec with BeforeAndAfter with RemoteTestHel
      theServer running {
 
        val start = System.currentTimeMillis()
-       getForStatus(root)
+       getForStatus
        val stop = System.currentTimeMillis()
 
        assert((stop - start) >= duration.toMillis)
@@ -82,7 +82,7 @@ class ResponseHandlerTest extends FunSpec with BeforeAndAfter with RemoteTestHel
 
 
       theServer running {
-        assert(get(root) === "get")
+        assert(get === "get")
       }
     }
 
@@ -109,9 +109,9 @@ class ResponseHandlerTest extends FunSpec with BeforeAndAfter with RemoteTestHel
 
 
       theServer running {
-        assert(get(root) === "foo")
-        assert(get(root) === "bar")
-        assert(get(root) === "baz")
+        assert(get === "foo")
+        assert(get === "bar")
+        assert(get === "baz")
       }
     }
 
@@ -124,8 +124,8 @@ class ResponseHandlerTest extends FunSpec with BeforeAndAfter with RemoteTestHel
 
 
       theServer running {
-        assert(getForStatus(root) === 201)
-        assert(get(root) === "hello")
+        assert(getForStatus === 201)
+        assert(get === "hello")
       }
     }
 
@@ -137,7 +137,7 @@ class ResponseHandlerTest extends FunSpec with BeforeAndAfter with RemoteTestHel
       }
 
       theServer running {
-        val version = Request.Get(root).execute.returnResponse.getProtocolVersion
+        val version = getForVersion
 
         assert(version.getMajor === 1)
         assert(version.getMinor === 0)
