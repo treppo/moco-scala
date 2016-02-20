@@ -7,6 +7,7 @@ import com.github.dreamhead.moco.matcher.AndRequestMatcher
 import com.github.dreamhead.moco.resource.Resource
 
 import scala.collection.JavaConversions._
+import scala.language.implicitConversions
 
 object Conversions {
   //implicit
@@ -18,8 +19,7 @@ object Conversions {
 
   implicit def toHandler(procedure: MocoProcedure): ResponseHandler = Moco.`with`(procedure)
 
-  implicit def toCompositeMocoConfig(config: MocoConfig[_]) = new CompositeMocoConfig(Seq(config))
-
+  implicit def toCompositeMocoConfig(config: MocoConfig[_]): CompositeMocoConfig = new CompositeMocoConfig(Seq(config))
 
 
   implicit val failover: Failover = Failover.DEFAULT_FAILOVER

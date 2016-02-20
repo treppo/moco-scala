@@ -3,6 +3,8 @@ package org.treppo.mocoscala.wrapper
 import com.github.dreamhead.moco.resource.Resource
 import com.github.dreamhead.moco.{Moco, RequestExtractor, RequestMatcher}
 
+import scala.language.existentials
+
 case class ExtractorMatcher(extractor: RequestExtractor[_ <: Any]) {
   def ===(expected: String): RequestMatcher = Moco.eq(extractor, expected)
 

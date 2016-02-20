@@ -10,19 +10,19 @@ class ExtractorMatcherTest extends FlatSpec {
   val matcher: ExtractorMatcher = new ExtractorMatcher(extractor)
 
   "a extractor matcher" should "be able to do exact match" in {
-    (matcher === "hello") shouldBe a[EqRequestMatcher[String]]
+    (matcher === "hello") shouldBe a[EqRequestMatcher[_]]
   }
 
   "a extractor matcher" should "be able to do contain match" in {
-    (matcher contain "wor") shouldBe a[ContainMatcher[String]]
+    (matcher contain "wor") shouldBe a[ContainMatcher[_]]
   }
 
   "a extractor matcher" should "be able to do startsWith match" in {
-    (matcher startsWith "hell") shouldBe a[StartsWithMatcher[String]]
+    (matcher startsWith "hell") shouldBe a[StartsWithMatcher[_]]
   }
 
   "a extractor matcher" should "be able to do endsWith match" in {
-    (matcher endsWith "hell") shouldBe a[EndsWithMatcher[String]]
+    (matcher endsWith "hell") shouldBe a[EndsWithMatcher[_]]
   }
 
 }
