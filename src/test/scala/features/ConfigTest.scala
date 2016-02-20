@@ -1,10 +1,9 @@
 package features
 
-import org.scalatest.{BeforeAndAfter, GivenWhenThen, FeatureSpec}
-
-import org.github.nicholasren.moco.helper.RemoteTestHelper
-import com.github.nicholasren.moco.dsl.SMoco._
-import com.github.nicholasren.moco.dsl.Conversions._
+import org.scalatest.{BeforeAndAfter, FeatureSpec, GivenWhenThen}
+import org.treppo.mocoscala.dsl.Conversions._
+import org.treppo.mocoscala.dsl.SMoco._
+import org.treppo.mocoscala.helper.RemoteTestHelper
 
 class ConfigTest extends FeatureSpec
 with GivenWhenThen with BeforeAndAfter

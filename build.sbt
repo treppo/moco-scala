@@ -1,8 +1,8 @@
-import SonatypeKeys._
-
 sonatypeSettings
 
 name := "moco-scala"
+
+organization := "org.treppo"
 
 version := "0.3"
 
@@ -24,8 +24,6 @@ publishTo <<= version { v: String =>
   else
     Some("releases" at nexus + "service/local/staging/deploy/maven2")
 }
-
-organization := "org.treppo"
 
 publishMavenStyle := true
 

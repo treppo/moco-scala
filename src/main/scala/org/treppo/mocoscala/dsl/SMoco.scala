@@ -1,4 +1,4 @@
-package com.github.nicholasren.moco.dsl
+package org.treppo.mocoscala.dsl
 
 import java.util.concurrent.TimeUnit
 
@@ -11,11 +11,11 @@ import com.github.dreamhead.moco.handler.{AndResponseHandler, SequenceContentHan
 import com.github.dreamhead.moco.internal.{ActualHttpServer, MocoHttpServer}
 import com.github.dreamhead.moco.procedure.LatencyProcedure
 import com.github.dreamhead.moco.resource.{ContentResource, Resource}
-import com.github.nicholasren.moco.dsl.Conversions.{CompositeMocoConfig, _}
-import com.github.nicholasren.moco.wrapper.{ExtractorMatcher, PartialRule, Rule}
 import com.google.common.collect.ImmutableList
 import com.google.common.net.HttpHeaders
 import io.netty.handler.codec.http.HttpResponseStatus
+import org.treppo.mocoscala.dsl.Conversions.{CompositeMocoConfig, _}
+import org.treppo.mocoscala.wrapper.{ExtractorMatcher, PartialRule, Rule}
 
 import scala.collection.JavaConversions._
 import scala.concurrent.duration.Duration
@@ -151,7 +151,7 @@ class SMoco(port: Int = 8080) {
     try {
       testFun
     } finally {
-      theServer.stop
+      theServer.stop()
     }
   }
 

@@ -1,17 +1,17 @@
-package com.github.nicholasren.moco.dsl
+package org.treppo.mocoscala.dsl
 
-import org.scalatest._
-import Matchers._
-import org.scalatest.mock.MockitoSugar
-import com.github.dreamhead.moco.config.{MocoContextConfig, MocoFileRootConfig}
-import com.github.dreamhead.moco._
-import com.github.nicholasren.moco.wrapper.ExtractorMatcher
-import com.github.nicholasren.moco.dsl.Conversions._
-import com.github.nicholasren.moco.dsl.Conversions.CompositeMocoConfig
-import com.github.nicholasren.moco.wrapper.ExtractorMatcher
-import com.github.dreamhead.moco.action.MocoAsyncAction
-import scala.concurrent.duration.{FiniteDuration, Duration}
 import java.util.concurrent.TimeUnit
+
+import com.github.dreamhead.moco._
+import com.github.dreamhead.moco.action.MocoAsyncAction
+import com.github.dreamhead.moco.config.{MocoContextConfig, MocoFileRootConfig}
+import org.scalatest.Matchers._
+import org.scalatest._
+import org.scalatest.mock.MockitoSugar
+import org.treppo.mocoscala.dsl.Conversions.{CompositeMocoConfig, _}
+import org.treppo.mocoscala.wrapper.ExtractorMatcher
+
+import scala.concurrent.duration.{Duration, FiniteDuration}
 
 class SMocoTest extends FlatSpec with MockitoSugar {
   val server = new SMoco()

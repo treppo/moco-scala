@@ -1,4 +1,4 @@
-package com.github.nicholasren.moco.wrapper
+package org.treppo.mocoscala.wrapper
 
 import com.github.dreamhead.moco.extractor.PlainExtractor
 import com.github.dreamhead.moco.matcher.{ContainMatcher, EndsWithMatcher, EqRequestMatcher, StartsWithMatcher}

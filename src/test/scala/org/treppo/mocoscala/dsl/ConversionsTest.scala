@@ -1,10 +1,10 @@
-package com.github.nicholasren.moco.dsl
+package org.treppo.mocoscala.dsl
 
+import com.github.dreamhead.moco.{MocoConfig, MocoProcedure, ResponseHandler}
 import org.scalatest.FlatSpec
-import com.github.dreamhead.moco.{MocoProcedure, ResponseHandler, MocoConfig}
 import org.scalatest.Matchers._
 import org.scalatest.mock.MockitoSugar
-import Conversions._
+import org.treppo.mocoscala.dsl.Conversions._
 
 class ConversionsTest extends FlatSpec with MockitoSugar {
 

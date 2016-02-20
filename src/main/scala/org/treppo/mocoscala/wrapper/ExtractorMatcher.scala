@@ -1,8 +1,7 @@
-package com.github.nicholasren.moco.wrapper
+package org.treppo.mocoscala.wrapper
 
-import com.github.dreamhead.moco.{RequestMatcher, Moco, RequestExtractor}
 import com.github.dreamhead.moco.resource.Resource
-
+import com.github.dreamhead.moco.{Moco, RequestExtractor, RequestMatcher}
 
 case class ExtractorMatcher(extractor: RequestExtractor[_ <: Any]) {
   def ===(expected: String): RequestMatcher = Moco.eq(extractor, expected)

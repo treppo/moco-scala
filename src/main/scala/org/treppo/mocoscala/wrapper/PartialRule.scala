@@ -1,7 +1,7 @@
-package com.github.nicholasren.moco.wrapper
+package org.treppo.mocoscala.wrapper
 
-import com.github.dreamhead.moco.{ResponseHandler, RequestMatcher}
-import com.github.nicholasren.moco.dsl.SMoco
+import com.github.dreamhead.moco.{RequestMatcher, ResponseHandler}
+import org.treppo.mocoscala.dsl.SMoco
 
 class PartialRule(matcher: RequestMatcher, moco: SMoco) {
 

@@ -1,11 +1,12 @@
-package com.github.nicholasren.moco.dsl
+package org.treppo.mocoscala.dsl
 
-import com.github.dreamhead.moco.resource.Resource
 import com.github.dreamhead.moco._
 import com.github.dreamhead.moco.handler.AndResponseHandler
-import com.github.dreamhead.moco.matcher.AndRequestMatcher
-import scala.collection.JavaConversions._
 import com.github.dreamhead.moco.handler.failover.Failover
+import com.github.dreamhead.moco.matcher.AndRequestMatcher
+import com.github.dreamhead.moco.resource.Resource
+
+import scala.collection.JavaConversions._
 
 object Conversions {
   //implicit

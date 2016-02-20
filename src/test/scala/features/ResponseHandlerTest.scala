@@ -1,16 +1,15 @@
 package features
 
-import org.scalatest.{FunSpec, BeforeAndAfter}
-
+import java.util.concurrent.TimeUnit
 
 import org.apache.http.client.fluent.Request
-import org.github.nicholasren.moco.helper.RemoteTestHelper
-import com.github.nicholasren.moco.dsl.SMoco
-import com.github.nicholasren.moco.dsl.SMoco._
-import com.github.nicholasren.moco.dsl.Conversions._
+import org.scalatest.{BeforeAndAfter, FunSpec}
+import org.treppo.mocoscala.dsl.Conversions._
+import org.treppo.mocoscala.dsl.SMoco
+import org.treppo.mocoscala.dsl.SMoco._
+import org.treppo.mocoscala.helper.RemoteTestHelper
 
 import scala.concurrent.duration.Duration
-import java.util.concurrent.TimeUnit
 
 class ResponseHandlerTest extends FunSpec with BeforeAndAfter with RemoteTestHelper {
 
