@@ -15,11 +15,9 @@ class EventActionTest extends FunSpec with RemoteTestHelper with MockitoSugar {
   describe("on complete") {
 
     it("perform predefined action") {
-      val theServer = server(port)
-
       val action = mock[MocoEventAction]
 
-      theServer default {
+      val theServer = server(port) default {
         text("foo")
       } on {
         complete(action)

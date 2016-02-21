@@ -13,17 +13,11 @@ import scala.concurrent.duration.Duration
 
 class ResponseHandlerTest extends FunSpec with BeforeAndAfter with RemoteTestHelper {
 
-  var theServer: Moco = null
-
-  val port = 8080
-
-  before {
-    theServer = server(port)
-  }
+  override val port = 8080
 
   describe("default") {
     it("send default response") {
-      theServer default {
+      val theServer = server(port) default {
         text("default")
       }
 
@@ -35,8 +29,7 @@ class ResponseHandlerTest extends FunSpec with BeforeAndAfter with RemoteTestHel
 
   describe("redirect") {
     it("redirect to expected url") {
-
-      theServer when {
+      val theServer = server(port) when {
         uri("/")
       } respond {
         text("foo")
@@ -53,16 +46,14 @@ class ResponseHandlerTest extends FunSpec with BeforeAndAfter with RemoteTestHel
   }
 
   describe("latency") {
-
     it("wait for a while") {
       val duration = Duration(1, TimeUnit.SECONDS)
 
-      theServer default {
+      val theServer = server(port) default {
         latency(duration)
       }
 
      theServer running {
-
        val start = System.currentTimeMillis()
        getForStatus
        val stop = System.currentTimeMillis()
@@ -74,12 +65,11 @@ class ResponseHandlerTest extends FunSpec with BeforeAndAfter with RemoteTestHel
 
   describe("responses") {
     it("send text") {
-      theServer when {
+      val theServer = server(port) when {
         method("get")
       } respond {
         text("get")
       }
-
 
       theServer running {
         assert(get === "get")
@@ -87,12 +77,11 @@ class ResponseHandlerTest extends FunSpec with BeforeAndAfter with RemoteTestHel
     }
 
     it("send headers") {
-      theServer when {
+      val theServer = server(port) when {
         method("get")
       } respond {
         headers("Content-Type" -> "json", "Accept" -> "html")
       }
-
 
       theServer running {
         assert(getForHeader("Content-Type") === "json")
@@ -101,12 +90,11 @@ class ResponseHandlerTest extends FunSpec with BeforeAndAfter with RemoteTestHel
     }
 
     it("send content in seq") {
-      theServer when {
+      val theServer = server(port) when {
         method("get")
       } respond {
         seq("foo", "bar", "baz")
       }
-
 
       theServer running {
         assert(get === "foo")
@@ -116,12 +104,11 @@ class ResponseHandlerTest extends FunSpec with BeforeAndAfter with RemoteTestHel
     }
 
     it("send multi response handler") {
-      theServer when {
+      val theServer = server(port) when {
         method("get")
       } respond {
         status(201) and text("hello")
       }
-
 
       theServer running {
         assert(getForStatus === 201)
@@ -130,7 +117,7 @@ class ResponseHandlerTest extends FunSpec with BeforeAndAfter with RemoteTestHel
     }
 
     it("send version") {
-      theServer when {
+      val theServer = server(port) when {
         method("get")
       } respond {
         version("HTTP/1.0")

@@ -130,12 +130,14 @@ class Moco(port: Int = 8080) {
     this
   }
 
-  def configs(configsFun: => CompositeMocoConfig) {
+  def configs(configsFun: => CompositeMocoConfig): this.type = {
     this.confs = configsFun.items
+    this
   }
 
-  def on(trigger: MocoEventTrigger) {
+  def on(trigger: MocoEventTrigger): this.type = {
     this.triggers = trigger :: this.triggers
+    this
   }
 
   def record(rule: Rule) = {

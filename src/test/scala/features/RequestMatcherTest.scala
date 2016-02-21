@@ -12,10 +12,9 @@ class RequestMatcherTest extends FunSpec with BeforeAndAfter with RemoteTestHelp
 
   describe("matchers") {
 
-    val theServer = server(port)
 
     it("match by uri") {
-      theServer when {
+      val theServer = server(port) when {
         uri("/hello") and method("post")
       } respond {
         status(200) and text("world")
@@ -28,7 +27,7 @@ class RequestMatcherTest extends FunSpec with BeforeAndAfter with RemoteTestHelp
     }
 
     it("match uri by regex") {
-      theServer when {
+      val theServer = server(port) when {
         uri matched "/hello.+"
       } respond {
         text("world")
@@ -41,7 +40,7 @@ class RequestMatcherTest extends FunSpec with BeforeAndAfter with RemoteTestHelp
     }
 
     it("match by query parameters") {
-      theServer when {
+      val theServer = server(port) when {
         query("foo") === "bar"
       } respond {
         text("bar")
@@ -54,7 +53,7 @@ class RequestMatcherTest extends FunSpec with BeforeAndAfter with RemoteTestHelp
     }
 
     it("match header by regex") {
-      theServer when {
+      val theServer = server(port) when {
         header("Content-Type") matched ".+json"
       } respond {
         text("headers matched")
@@ -67,7 +66,7 @@ class RequestMatcherTest extends FunSpec with BeforeAndAfter with RemoteTestHelp
     }
 
     it("match text by regex") {
-      theServer when {
+      val theServer = server(port) when {
         text matched "hello.+"
       } respond {
         text("text matched")
@@ -81,7 +80,7 @@ class RequestMatcherTest extends FunSpec with BeforeAndAfter with RemoteTestHelp
     }
 
     it("match by method") {
-      theServer when {
+      val theServer = server(port) when {
         method("get")
       } respond {
         text("get")
@@ -93,7 +92,7 @@ class RequestMatcherTest extends FunSpec with BeforeAndAfter with RemoteTestHelp
     }
 
     it("match by headers") {
-      theServer when {
+      val theServer = server(port) when {
         header("Content-Type") === "content-type"
       } respond {
         text("headers matched")
@@ -105,7 +104,7 @@ class RequestMatcherTest extends FunSpec with BeforeAndAfter with RemoteTestHelp
     }
 
     it("match by version") {
-      theServer when {
+      val theServer = server(port) when {
         version("HTTP/1.0")
       } respond {
         text("version matched")
@@ -117,7 +116,7 @@ class RequestMatcherTest extends FunSpec with BeforeAndAfter with RemoteTestHelp
     }
 
     it("match by cookie") {
-      theServer when {
+      val theServer = server(port) when {
         cookie("foo") === "bar"
       } respond {
         status(400)
@@ -129,7 +128,7 @@ class RequestMatcherTest extends FunSpec with BeforeAndAfter with RemoteTestHelp
     }
 
     it("match by form") {
-      theServer when {
+      val theServer = server(port) when {
         form("foo") === "bar"
       } respond {
         text("bar")
@@ -141,7 +140,7 @@ class RequestMatcherTest extends FunSpec with BeforeAndAfter with RemoteTestHelp
     }
 
     it("can define multi matchers") {
-      theServer when {
+      val theServer = server(port) when {
         method("get")
       } respond {
         text("get")
