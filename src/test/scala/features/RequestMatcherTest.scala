@@ -3,7 +3,7 @@ package features
 import org.apache.http.HttpVersion
 import org.scalatest.{BeforeAndAfter, FunSpec}
 import org.treppo.mocoscala.dsl.Conversions._
-import org.treppo.mocoscala.dsl.SMoco._
+import org.treppo.mocoscala.dsl.Moco._
 import org.treppo.mocoscala.helper.RemoteTestHelper
 
 class RequestMatcherTest extends FunSpec with BeforeAndAfter with RemoteTestHelper {

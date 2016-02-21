@@ -5,7 +5,7 @@ import org.mockito.Mockito._
 import org.scalatest.FunSpec
 import org.scalatest.mock.MockitoSugar
 import org.treppo.mocoscala.dsl.Conversions._
-import org.treppo.mocoscala.dsl.SMoco._
+import org.treppo.mocoscala.dsl.Moco._
 import org.treppo.mocoscala.helper.RemoteTestHelper
 
 class EventActionTest extends FunSpec with RemoteTestHelper with MockitoSugar {

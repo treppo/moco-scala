@@ -5,15 +5,15 @@ import java.util.concurrent.TimeUnit
 import org.apache.http.client.fluent.Request
 import org.scalatest.{BeforeAndAfter, FunSpec}
 import org.treppo.mocoscala.dsl.Conversions._
-import org.treppo.mocoscala.dsl.SMoco
-import org.treppo.mocoscala.dsl.SMoco._
+import org.treppo.mocoscala.dsl.Moco
+import org.treppo.mocoscala.dsl.Moco._
 import org.treppo.mocoscala.helper.RemoteTestHelper
 
 import scala.concurrent.duration.Duration
 
 class ResponseHandlerTest extends FunSpec with BeforeAndAfter with RemoteTestHelper {
 
-  var theServer: SMoco = null
+  var theServer: Moco = null
 
   val port = 8080
 
