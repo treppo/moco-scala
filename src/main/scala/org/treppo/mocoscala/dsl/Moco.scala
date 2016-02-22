@@ -122,17 +122,17 @@ case class Moco(port: Int = 8080,
 
   def when(matcher: RequestMatcher): PartialRule = new PartialRule(matcher, this)
 
-  def default(handler: ResponseHandler): Moco =
-    copy(rules = Rule.default(handler) :: this.rules)
+  def respond(handler: ResponseHandler): Moco =
+    copy(rules = Rule.default(handler) :: rules)
 
   def configs(configsFun: => CompositeMocoConfig): Moco =
     copy(confs = configsFun.items)
 
   def on(trigger: MocoEventTrigger): Moco =
-    copy(triggers = trigger :: this.triggers)
+    copy(triggers = trigger :: triggers)
 
   def record(rule: Rule): Moco =
-    copy(rules = rule :: this.rules)
+    copy(rules = rule :: rules)
 
   private def startServer: MocoHttpServer = {
     val theServer = new MocoHttpServer(replay)
@@ -141,16 +141,14 @@ case class Moco(port: Int = 8080,
   }
 
   private def replay: ActualHttpServer = {
-    val server = confs match {
-      case confs: Seq[MocoConfig[_]] => JMoco.httpServer(port, confs: _*).asInstanceOf[ActualHttpServer]
-      case _ => JMoco.httpServer(port).asInstanceOf[ActualHttpServer]
-    }
+    val server = if (confs.isEmpty)
+      JMoco.httpServer(port).asInstanceOf[ActualHttpServer]
+    else
+      JMoco.httpServer(port, confs: _*).asInstanceOf[ActualHttpServer]
 
-    rules.foreach { rule: Rule =>
-      rule.matcher match {
-        case Some(matcher) => server.request(matcher).response(rule.handler)
-        case None => server.response(rule.handler)
-      }
+    rules.foreach {
+      case Rule(Some(matcher), handler) => server.request(matcher).response(handler)
+      case Rule(None, handler) => server.response(handler)
     }
 
     triggers.foreach(server.on)

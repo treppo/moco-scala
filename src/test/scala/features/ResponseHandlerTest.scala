@@ -2,10 +2,8 @@ package features
 
 import java.util.concurrent.TimeUnit
 
-import org.apache.http.client.fluent.Request
 import org.scalatest.{BeforeAndAfter, FunSpec}
 import org.treppo.mocoscala.dsl.Conversions._
-import org.treppo.mocoscala.dsl.Moco
 import org.treppo.mocoscala.dsl.Moco._
 import org.treppo.mocoscala.helper.RemoteTestHelper
 
@@ -17,7 +15,7 @@ class ResponseHandlerTest extends FunSpec with BeforeAndAfter with RemoteTestHel
 
   describe("default") {
     it("send default response") {
-      val theServer = server(port) default {
+      val theServer = server(port) respond {
         text("default")
       }
 
@@ -49,17 +47,17 @@ class ResponseHandlerTest extends FunSpec with BeforeAndAfter with RemoteTestHel
     it("wait for a while") {
       val duration = Duration(1, TimeUnit.SECONDS)
 
-      val theServer = server(port) default {
+      val theServer = server(port) respond {
         latency(duration)
       }
 
-     theServer running {
-       val start = System.currentTimeMillis()
-       getForStatus
-       val stop = System.currentTimeMillis()
+      theServer running {
+        val start = System.currentTimeMillis()
+        getForStatus
+        val stop = System.currentTimeMillis()
 
-       assert((stop - start) >= duration.toMillis)
-     }
+        assert((stop - start) >= duration.toMillis)
+      }
     }
   }
 
