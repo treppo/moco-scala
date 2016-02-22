@@ -20,7 +20,7 @@ class MocoTest extends FlatSpec with MockitoSugar {
     val conf2 = mock[MocoConfig[_]]
     val configs = new CompositeMocoConfig(Seq(conf1, conf2))
 
-    val server = new Moco().configs(configs)
+    val server = Moco().configs(configs)
 
     server.confs should equal(Seq(conf1, conf2))
   }
@@ -28,7 +28,7 @@ class MocoTest extends FlatSpec with MockitoSugar {
   "an event handler" should "record event triggers" in {
     val trigger = mock[MocoEventTrigger]
 
-    val server = new Moco().on(trigger)
+    val server = Moco().on(trigger)
 
     server.triggers should contain(trigger)
   }

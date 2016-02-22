@@ -26,7 +26,7 @@ object Moco {
 
   def context(context: String): MocoConfig[_] = new MocoContextConfig(context)
 
-  def server(port: Int): Moco = new Moco(port)
+  def server(port: Int): Moco = Moco(port)
 
   def uri(value: String): Resource = JMoco.uri(value)
 
