@@ -6,12 +6,7 @@ version := "0.3"
 
 scalaVersion := "2.11.7"
 
-scalacOptions in ThisBuild ++= {
-  if (scalaVersion.value.startsWith("2.11"))
-    Seq("-unchecked", "-deprecation", "-feature", "-Xfatal-warnings")
-  else
-    Seq("-unchecked", "-deprecation", "-feature")
-}
+scalacOptions in ThisBuild ++= Seq("-unchecked", "-deprecation", "-feature", "-Xfatal-warnings")
 
 crossScalaVersions := Seq("2.10.6", "2.11.7")
 

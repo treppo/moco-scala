@@ -122,17 +122,13 @@ case class Moco(port: Int = 8080,
 
   def when(matcher: RequestMatcher): PartialRule = new PartialRule(matcher, this)
 
-  def respond(handler: ResponseHandler): Moco =
-    copy(rules = Rule.default(handler) :: rules)
+  def respond(handler: ResponseHandler): Moco = copy(rules = Rule.default(handler) :: rules)
 
-  def configs(configsFun: => CompositeMocoConfig): Moco =
-    copy(confs = configsFun.items)
+  def configs(configsFun: => CompositeMocoConfig): Moco = copy(confs = configsFun.items)
 
-  def on(trigger: MocoEventTrigger): Moco =
-    copy(triggers = trigger :: triggers)
+  def on(trigger: MocoEventTrigger): Moco = copy(triggers = trigger :: triggers)
 
-  def record(rule: Rule): Moco =
-    copy(rules = rule :: rules)
+  def record(rule: Rule): Moco = copy(rules = rule :: rules)
 
   private def startServer: MocoHttpServer = {
     val theServer = new MocoHttpServer(replay)
