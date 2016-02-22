@@ -38,7 +38,6 @@ class ConfigTest extends FunSpec with RemoteTestHelper {
       theServer running {
         assert(get("/hello") === "world")
       }
-
     }
   }
 }

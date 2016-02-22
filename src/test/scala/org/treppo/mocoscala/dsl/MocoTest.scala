@@ -15,14 +15,12 @@ import scala.concurrent.duration.{Duration, FiniteDuration}
 
 class MocoTest extends FlatSpec with MockitoSugar {
 
-  val server = new Moco()
-
   "a config api" should "capture multiple configs" in {
     val conf1 = mock[MocoConfig[_]]
     val conf2 = mock[MocoConfig[_]]
     val configs = new CompositeMocoConfig(Seq(conf1, conf2))
 
-    server.configs(configs)
+    val server = new Moco().configs(configs)
 
     server.confs should equal(Seq(conf1, conf2))
   }
@@ -30,7 +28,7 @@ class MocoTest extends FlatSpec with MockitoSugar {
   "an event handler" should "record event triggers" in {
     val trigger = mock[MocoEventTrigger]
 
-    server.on(trigger)
+    val server = new Moco().on(trigger)
 
     server.triggers should contain(trigger)
   }
@@ -114,8 +112,5 @@ class MocoTest extends FlatSpec with MockitoSugar {
     val duration: FiniteDuration = Duration(2, TimeUnit.SECONDS)
 
     Moco.async(action, duration) shouldBe a[MocoAsyncAction]
-
   }
-
-
 }

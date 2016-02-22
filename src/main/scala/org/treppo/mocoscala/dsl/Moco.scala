@@ -106,13 +106,10 @@ object Moco {
 }
 
 
-class Moco(port: Int = 8080) {
-
-  var triggers: List[MocoEventTrigger] = List()
-
-  var confs: Seq[MocoConfig[_]] = Seq()
-
-  var rules: List[Rule] = List()
+case class Moco(port: Int = 8080,
+                triggers: List[MocoEventTrigger] = List(),
+                confs: Seq[MocoConfig[_]] = Seq(),
+                rules: List[Rule] = List()) {
 
   def running[T](testFun: => T): T = {
     val theServer = startServer
@@ -125,24 +122,17 @@ class Moco(port: Int = 8080) {
 
   def when(matcher: RequestMatcher): PartialRule = new PartialRule(matcher, this)
 
-  def default(handler: ResponseHandler): Moco = {
-    this.rules = Rule.default(handler) :: this.rules
-    this
-  }
+  def default(handler: ResponseHandler): Moco =
+    copy(rules = Rule.default(handler) :: this.rules)
 
-  def configs(configsFun: => CompositeMocoConfig): this.type = {
-    this.confs = configsFun.items
-    this
-  }
+  def configs(configsFun: => CompositeMocoConfig): Moco =
+    copy(confs = configsFun.items)
 
-  def on(trigger: MocoEventTrigger): this.type = {
-    this.triggers = trigger :: this.triggers
-    this
-  }
+  def on(trigger: MocoEventTrigger): Moco =
+    copy(triggers = trigger :: this.triggers)
 
-  def record(rule: Rule) = {
-    this.rules = rule :: this.rules
-  }
+  def record(rule: Rule): Moco =
+    copy(rules = rule :: this.rules)
 
   private def startServer: MocoHttpServer = {
     val theServer = new MocoHttpServer(replay)
@@ -156,12 +146,11 @@ class Moco(port: Int = 8080) {
       case _ => JMoco.httpServer(port).asInstanceOf[ActualHttpServer]
     }
 
-    rules.foreach {
-      rule: Rule =>
-        rule.matcher match {
-          case Some(matcher) => server.request(matcher).response(rule.handler)
-          case None => server.response(rule.handler)
-        }
+    rules.foreach { rule: Rule =>
+      rule.matcher match {
+        case Some(matcher) => server.request(matcher).response(rule.handler)
+        case None => server.response(rule.handler)
+      }
     }
 
     triggers.foreach(server.on)
