@@ -15,14 +15,14 @@ Current moco support two global configurations: [file root](https://github.com/d
 ###### file root
 
 ```scala
-server configs {
+Moco() configs {
   fileRoot("src/test/resources")
 }
 ```
 
 ###### context
 ```scala
-server configs {
+Moco() configs {
   context("/hello")
 }
 ```
@@ -259,7 +259,7 @@ when {
   method("GET") and uri matched "/proxy/.*"
 } respond {
   proxy {
-    from("/proxy") to ("http://localhost:9090/target")
+    from("/proxy") to "http://localhost:9090/target"
   }
 }
 ```
@@ -288,8 +288,8 @@ respond {
 You can simulate a slow response:
 ```scala
 respond {
-  //you need to import scala.concurrent.duration.Duration to have this syntax sugar
-  latency(2 seconds)
+  import scala.concurrent.duration.DurationInt
+  latency(2.seconds)
 }
 ```
 
@@ -305,9 +305,9 @@ respond {
 #####Event
 You can specify a subsequent action once the response was sent:
 ```scala
-server on {
+Moco() on {
     complete{
-      get("http"//another_site)
+      get("http://another_site")
     }
 }
 ```
@@ -317,10 +317,10 @@ server on {
 You can use async api to fire event asynchronsously
 
 ```scala
-server on {
+Moco() on {
     complete {
       async {
-        get("http"//another_site)
+        get("http://another_site")
       }
     }
 }
