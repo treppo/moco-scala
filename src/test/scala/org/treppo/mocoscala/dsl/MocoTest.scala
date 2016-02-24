@@ -4,11 +4,11 @@ import java.util.concurrent.TimeUnit
 
 import com.github.dreamhead.moco.action.MocoAsyncAction
 import com.github.dreamhead.moco.config.{MocoContextConfig, MocoFileRootConfig}
-import com.github.dreamhead.moco.{Moco => JMoco, _}
+import com.github.dreamhead.moco._
 import org.scalatest.Matchers._
 import org.scalatest._
 import org.scalatest.mock.MockitoSugar
-import org.treppo.mocoscala.dsl.Conversions._
+import org.treppo.mocoscala.dsl.Moco._
 import org.treppo.mocoscala.wrapper.ExtractorMatcher
 
 import scala.concurrent.duration.{Duration, FiniteDuration}

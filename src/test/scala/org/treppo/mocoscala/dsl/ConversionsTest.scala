@@ -4,9 +4,10 @@ import com.github.dreamhead.moco.{MocoConfig, MocoProcedure, ResponseHandler}
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers._
 import org.scalatest.mock.MockitoSugar
-import org.treppo.mocoscala.dsl.Conversions._
 
 class ConversionsTest extends FlatSpec with MockitoSugar {
+
+  import Moco._
 
   "a moco config" should "compose with another moco config" in {
     val conf1 = mock[MocoConfig[_]]

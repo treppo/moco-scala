@@ -16,7 +16,6 @@ Current moco support two global configurations: [file root](https://github.com/d
 
 ```scala
 import org.treppo.mocoscala.dsl.Moco._
-import org.treppo.mocoscala.dsl.Conversions._
 
 server(8080) configs {
   fileRoot("src/test/resources")

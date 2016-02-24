@@ -1,8 +1,8 @@
 package org.treppo.mocoscala.helper
 
-import org.apache.http.{ProtocolVersion, HttpVersion}
-import org.apache.http.client.fluent.{Response, Request}
+import org.apache.http.client.fluent.{Request, Response}
 import org.apache.http.message.BasicNameValuePair
+import org.apache.http.{HttpVersion, ProtocolVersion}
 
 trait RemoteTestHelper {
 

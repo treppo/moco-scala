@@ -18,7 +18,6 @@ libraryDependencies += "org.treppo" %% "moco-scala" % "0.4.0"
 ```scala
 // Import dependencies
 import org.treppo.mocoscala.dsl.Moco._
-import org.treppo.mocoscala.dsl.Conversions._
 
 // Create server
 val theServer = server(8080) when { uri("/hello") } respond { status(200) }

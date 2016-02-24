@@ -2,7 +2,6 @@ package features
 
 import org.apache.http.HttpVersion
 import org.scalatest.{BeforeAndAfter, FunSpec}
-import org.treppo.mocoscala.dsl.Conversions._
 import org.treppo.mocoscala.dsl.Moco._
 import org.treppo.mocoscala.helper.RemoteTestHelper
 

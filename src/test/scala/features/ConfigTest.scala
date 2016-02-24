@@ -1,7 +1,6 @@
 package features
 
-import org.scalatest.{FeatureSpec, FunSpec, GivenWhenThen}
-import org.treppo.mocoscala.dsl.Conversions._
+import org.scalatest.FunSpec
 import org.treppo.mocoscala.dsl.Moco._
 import org.treppo.mocoscala.helper.RemoteTestHelper
 

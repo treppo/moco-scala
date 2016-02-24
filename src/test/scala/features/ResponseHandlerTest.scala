@@ -3,7 +3,6 @@ package features
 import java.util.concurrent.TimeUnit
 
 import org.scalatest.{BeforeAndAfter, FunSpec}
-import org.treppo.mocoscala.dsl.Conversions._
 import org.treppo.mocoscala.dsl.Moco._
 import org.treppo.mocoscala.helper.RemoteTestHelper
 
