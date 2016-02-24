@@ -15,141 +15,144 @@ Current moco support two global configurations: [file root](https://github.com/d
 ###### file root
 
 ```scala
-Moco() configs {
+import org.treppo.mocoscala.dsl.Moco._
+import org.treppo.mocoscala.dsl.Conversions._
+
+server(8080) configs {
   fileRoot("src/test/resources")
 }
 ```
 
 ###### context
 ```scala
-Moco() configs {
+server(8080) configs {
   context("/hello")
 }
 ```
 
 #### Matcher Apis:
-#####Uri
+##### Uri
 
 match by uri
 ```scala
-when {
-    uri("/hello")
+server(8080) when {
+  uri("/hello")
 }
 ```
 or match by regex
 ```scala
-when {
-    uri matched "/hello.+"
+server(8080) when {
+  uri matched "/hello.+"
 }
 ```
 
-#####matcher-method
+##### Request method
 ```scala
-when {
-    method("get")
+server(8080) when {
+  method("get")
 }
 ```
-#####Text
+##### Text
 
 by value
 ```scala
-when {
-    text("foo")
+server(8080) when {
+  text("foo")
 }
 ```
 or by regex
 ```scala
-when {
-    text matched "hello.+"
+server(8080) when {
+  text matched "hello.+"
 }
 ```
 
-#####File
+##### File
 ```scala
-when {
-    file("foo.req")
+server(8080) when {
+  file("foo.req")
 }
 ```
 
-#####Version
+##### Version
 ```scala
-when {
-    version("HTTP/1.0")
+server(8080) when {
+  version("HTTP/1.0")
 }
 ```
 
-#####Header
+##### Header
 
 match by value
 ```scala
-when {
-    header("Content-Type") === "application/json"
+server(8080) when {
+  header("Content-Type") === "application/json"
 }
 ```
 or by regex
 ```scala
-when {
-    header("Content-Type") matched ".+json"
+server(8080) when {
+  header("Content-Type") matched ".+json"
 }
 ```
-#####Query
+##### Query
 
 match by value
 ```scala
-when {
-     query("foo") === "bar"
+server(8080) when {
+   query("foo") === "bar"
 }
 ```
 or by regex:
 ```scala
-when {
-     query("foo") matched ".+bar"
+server(8080) when {
+   query("foo") matched ".+bar"
 }
 ```
 
-#####Cookie
+##### Cookie
 
 match by value
 ```scala
-when {
-    cookie("foo") === "bar"
+server(8080) when {
+  cookie("foo") === "bar"
 }
 ```
   or by regex:
 ```scala
-when {
-    cookie("foo") matched ".+bar"
+server(8080) when {
+  cookie("foo") matched ".+bar"
 }
 ```
 
-#####Form
+##### Form
 
 you can do exact match by form value
 ```scala
-when {
+server(8080) when {
   form("foo") === "bar"
 }
 ````
 or by match value with regex
 
 ```scala
-when {
+server(8080) when {
   form("foo") matched "ba.+"
 }
 ````
 
-#####Xml
+##### Xml
 
 ```scala
-when {
+server(8080) when {
   xml("<body>something</body>")
 }
 ```
 
-#####Xpath
+##### Xpath
 similarly, you can do exact match by value
 ```scala
-when {
+server(8080) when {
   xpath("/request/parameters/id/text()") === "foo"
 }
 
@@ -157,51 +160,51 @@ when {
 or match by regex
 
 ```scala
-when {
+server(8080) when {
   xpath("/request/parameters/id/text()") matched "fo.+"
 }
 
 ```
 
-#####Json
+##### Json
 ```scala
-when {
+server(8080) when {
   json("{\"foo\": \"bar\"}")
 }
 ```
-#####Jsonpath
+##### Jsonpath
 similar to xpath.
 
 #### Response Apis:
 
-#####Text
+##### Text
 
 ```scala
 respond {
-    text("foo")
+  text("foo")
 }
 ```
 
-#####File
+##### File
 ```scala
 respond {
-    file("foo.req")
+  file("foo.req")
 }
 ```
 
-#####Header
+##### Header
 
 ```scala
 respond {
-    headers("Content-Type" -> "json", "Accept" -> "html")
+  headers("Content-Type" -> "json", "Accept" -> "html")
 }
 ```
 
-#####Cookie
+##### Cookie
 
 ```scala
 respond {
-    cookie("foo" -> "bar")
+  cookie("foo" -> "bar")
 }
 ```
 
@@ -209,30 +212,30 @@ respond {
 
 ```scala
 respond {
-    status 200
+  status 200
 }
 ```
 ##### Version
 
 ```scala
 respond {
-    version("HTTP/1.0")
+  version("HTTP/1.0")
 }
 ```
 
-#####Proxy Apis
+##### Proxy Apis
 
 
-#####Single URL
-We can response with a specified url, just like a proxy.
+##### Single URL
+Respond with a specified url, just like a proxy.
 
 ```scala
 respond {
   proxy("http://example.com")
 }
 ```
-#####Failover
-Proxy also support failover
+##### Failover
+Proxy also supports failover
 
 ```scala
 respond {
@@ -242,8 +245,9 @@ respond {
 }
 ```
 
-#####Playback
-We also supports playback with save remote request and resonse into local file.
+##### Playback
+Supports playback saving remote request and response into local file.
+
 ```scala
 respond {
   proxy("http://example.com") {
@@ -252,10 +256,11 @@ respond {
 }
 ```
 
-#####Batch URLs
+##### Batch URLs
 Proxy also support proxying a batch of URLs in the same context
+
 ```scala
-when {
+server(8080) when {
   method("GET") and uri matched "/proxy/.*"
 } respond {
   proxy {
@@ -264,37 +269,39 @@ when {
 }
 ```
 
-#####Redirect Api:
-
+##### Redirect Api:
 You can simply redirect a request to a different location:
 
 ```scala
-when {
+server(8080) when {
   uri("/redirect")
 } respond {
   redirectTo("/target")
 }
 ```
 
-#####Attachment
-You can setup a attachment as response
+##### Attachment
+You can setup an attachment as response
 ```scala
 respond {
   attachment("filename", file("filepath"))
 }
 ```
 
-#####Latency
+##### Latency
 You can simulate a slow response:
+
 ```scala
+import scala.concurrent.duration.DurationInt
+
 respond {
-  import scala.concurrent.duration.DurationInt
   latency(2.seconds)
 }
 ```
 
-#####Sequence
-You can simulate a sequence of response:
+##### Sequence
+You can simulate a sequence of responses:
+
 ```scala
 respond {
   seq("foo", "bar", "blah")
@@ -302,62 +309,53 @@ respond {
 ```
 
 
-#####Event
+##### Event
 You can specify a subsequent action once the response was sent:
+
 ```scala
-Moco() on {
-    complete{
+server(8080) on {
+  complete{
+    get("http://another_site")
+  }
+}
+```
+
+
+##### Asynchronous
+You can use the async api to fire events asynchronsously
+
+```scala
+server(8080) on {
+  complete {
+    async {
       get("http://another_site")
     }
+  }
 }
-```
-
-
-#####Asynchronous
-You can use async api to fire event asynchronsously
-
-```scala
-Moco() on {
-    complete {
-      async {
-        get("http://another_site")
-      }
-    }
-}
-```
-
-### Advanced Usage
-
-to enable advanced usage, you have to import conversions as follow:
-
-```scala
-import com.github.nicholasren.moco.dsl.Conversions._
 ```
 
 #### Multiple matchers
 
 ```scala
-when {
+server(8080) when {
   uri("/hello") and method("post")
 } respond {
   text("world")
 }
-
 ```
 #### Multiple responses
 ```scala
-when {
+server(8080) when {
   uri("/not-exits")
 } respond {
   status(400) and text("BAD REQUEST")
 }
-
 ```
 
 #### Multiple behaviours
 
 ```scala
-when {
+server(8080) when {
   method("get")
 } respond {
   text("get")

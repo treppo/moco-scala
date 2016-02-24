@@ -2,7 +2,7 @@ name := "moco-scala"
 
 organization := "org.treppo"
 
-version := "0.4"
+version := "0.4.0"
 
 scalaVersion := "2.11.7"
 

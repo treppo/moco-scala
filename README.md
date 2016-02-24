@@ -1,36 +1,27 @@
 moco-scala
 ==========
+[![Build Status](https://travis-ci.org/treppo/moco-scala.svg?branch=master)](https://travis-ci.org/treppo/moco-scala)
 
-This is a scala wrapper for [moco](https://github.com/dreamhead/moco).
-The purpose of this project is to leverage scala's elegant syntax to provide beautiful DSL for using moco in scala testing.
 
-[![Build Status](https://travis-ci.org/treppo/moco-scala.svg?branch=master)](https://travis-ci.org/nicholasren/moco-scala)
+This is a scala wrapper for [moco](https://github.com/dreamhead/moco), based on the unmaintained
+[moco-scala](https://github.com/nicholasren/moco-scala) by Nicholas Ren.
+In contrast to the the previous versions by Nicholas, the Moco server does not have mutable state.
 
-### How to use
 
-#### Add dependency
+## How to use
+### Add dependency
 ```sbt
-libraryDependencies += "org.treppo" %% "moco-scala" % "0.3"
-```
-
-#### Try latest version
-If you want to try latest version, just add snapshot repo to dependency resolver
-
-```sbt
-resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
+libraryDependencies += "org.treppo" %% "moco-scala" % "0.4.0"
 ```
 
 ### Quick Start
 ```scala
 // Import dependencies
-import org.treppo.mocoscala.dsl.SMoco._
+import org.treppo.mocoscala.dsl.Moco._
 import org.treppo.mocoscala.dsl.Conversions._
 
 // Create server
-val theServer = server(8080)
-
-// Record behaviour
-theServer when { uri("/hello") } respond { status(200) }
+val theServer = server(8080) when { uri("/hello") } respond { status(200) }
 
 // Running server and test your stuff
 theServer running  {
@@ -40,10 +31,13 @@ theServer running  {
 }
 ```
 
-### Document
-Api documentation can be found [here.](doc/api.md)
+## Documentation
+Detailed feature documentation can be found in the [doc/api.md](doc/api.md)
 
-Also, please refer to [functional tests](https://github.com/nicholasren/moco-scala/tree/master/src/test/scala/features) for detail usage.
+Also, please refer to [functional tests](https://github.com/treppo/moco-scala/tree/master/src/test/scala/features).
 
-### Contribution:
-This project is still in process, any question or suggestion is more than welcome.
+## Contribution:
+Questions, suggestions or pull requests are more than welcome in the Issues section.
+
+## License
+Licensed under the [MIT license](https://github.com/treppo/moco-scala/blob/master/MIT-LICENSE.txt)
