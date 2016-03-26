@@ -78,7 +78,7 @@ server(8080) when {
 }
 ```
 
-##### Body text matchers
+##### Text body matchers
 
 match by exact body text
 ```scala
@@ -173,7 +173,7 @@ server(8080) when {
 }
 ```
 
-##### Xml
+##### XML body matcher
 
 ```scala
 server(8080) when {

@@ -66,7 +66,7 @@ class RequestMatchersTest extends FunSpec with BeforeAndAfter with RemoteTestHel
 
         theServer running {
           assert(get === "get")
-          assert(post("") === "post")
+          assert(post === "post")
         }
       }
     }
@@ -85,7 +85,7 @@ class RequestMatchersTest extends FunSpec with BeforeAndAfter with RemoteTestHel
       }
     }
 
-    describe("body text matchers") {
+    describe("text body matchers") {
       they("match by text") {
         val theServer = server(port) when {
           text("hello")

@@ -9,25 +9,29 @@ trait RemoteTestHelper {
   val port: Int
   private lazy val root = s"http://localhost:$port"
 
-  def get: String = content(Request.Get(root).execute)
+  def get: String = content(executeGet())
 
-  def get(uri: String): String = content(Request.Get(root + uri).execute)
+  def get(uri: String): String = content(executeGet(uri))
 
   def post(body: String): String = postBody(root, body)
+
+  def post: String = postBody(root, "")
 
   def post(uri: String, body: String): String =
     postBody(root + uri, body)
 
-  def postForm(form: (String, String)) =
-    content(Request.Post(root).bodyForm(new BasicNameValuePair(form._1, form._2)).execute)
+  def postForm(form: (String, String)) = form match {
+    case (name, value) =>
+      content(Request.Post(root).bodyForm(new BasicNameValuePair(name, value)).execute)
+  }
 
   def put(uri: String) = content(Request.Put(uri).execute)
 
   def delete(uri: String) = content(Request.Delete(uri).execute)
 
-  def getForStatus = status(Request.Get(root).execute)
+  def getForStatus = status(executeGet())
 
-  def getForStatus(uri: String) = status(Request.Get(root + uri).execute)
+  def getForStatus(uri: String) = status(executeGet(uri))
 
   def getWithHeaders(headers: (String, String)*) = {
     val get = Request.Get(root)
@@ -46,14 +50,14 @@ trait RemoteTestHelper {
   }
 
   def getForHeader(headerName: String): String = {
-    Request.Get(root).execute.returnResponse.getFirstHeader(headerName).getValue
+    executeGet().returnResponse.getFirstHeader(headerName).getValue
   }
 
   def getWithVersion(version: HttpVersion): String =
     Request.Get(root).version(version).execute.returnContent.asString
 
   def getForVersion: ProtocolVersion =
-    Request.Get(root).execute.returnResponse.getProtocolVersion
+    executeGet().returnResponse.getProtocolVersion
 
   private def content(response: Response): String =
     response.returnContent().asString
@@ -61,7 +65,9 @@ trait RemoteTestHelper {
   private def postBody(uri: String, body: String) =
     content(Request.Post(uri).bodyByteArray(body.getBytes).execute)
 
-  private def status(response: Response): Int = {
+  private def status(response: Response): Int =
     response.returnResponse.getStatusLine.getStatusCode
-  }
+
+  private def executeGet(uri: String = ""): Response =
+    Request.Get(root + uri).execute
 }
