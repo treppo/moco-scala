@@ -29,42 +29,142 @@ server(8080) configs {
 }
 ```
 
-#### Matcher Apis:
-##### Uri
+#### Request matchers
+##### URI matchers
 
-match by uri
+match by URI
 ```scala
 server(8080) when {
   uri("/hello")
 }
 ```
-or match by regex
+
+match URI by Regex
 ```scala
 server(8080) when {
   uri matched "/hello.+"
 }
 ```
 
-##### Request method
+#### Multiple matchers
+
+chain multiple matchers with same response
+```scala
+server(8080) when {
+  uri("/hello") and method("post")
+} respond {
+  text("world")
+}
+```
+
+chain multiple matchers with different response
+
+```scala
+server(port) when {
+  method("get")
+} respond {
+  text("get")
+} when {
+  method("post")
+} respond {
+  text("post")
+}
+```
+
+##### Request method matcher
 ```scala
 server(8080) when {
   method("get")
 }
 ```
-##### Text
 
-by value
+##### Body text matchers
+
+match by exact body text
 ```scala
 server(8080) when {
   text("foo")
 }
 ```
-or by regex
+
+match body text by regex
 ```scala
 server(8080) when {
   text matched "hello.+"
 }
 ```
+
+##### Query parameter matchers
+
+match by exact value
+```scala
+server(8080) when {
+   query("foo") === "bar"
+}
+```
+
+match value by regex
+```scala
+server(8080) when {
+   query("foo") matched ".+bar"
+}
+```
+
+##### Header matchers
+
+match by exact header value
+```scala
+server(8080) when {
+  header("Content-Type") === "application/json"
+}
+```
+
+match header values by regex
+```scala
+server(8080) when {
+  header("Content-Type") matched ".+json"
+}
+```
+
+##### HTTP version matcher
+```scala
+server(8080) when {
+  version("HTTP/1.0")
+}
+```
+
+##### Cookie matchers
+
+match by exact value
+```scala
+server(8080) when {
+  cookie("foo") === "bar"
+}
+```
+
+match cookie value by regex:
+```scala
+server(8080) when {
+  cookie("foo") matched ".+bar"
+}
+```
+
+##### Form matchers
+
+match by exact form value
+```scala
+server(8080) when {
+  form("foo") === "bar"
+}
+````
+
+match value by regex
+
+```scala
+server(8080) when {
+  form("foo") matched "ba.+"
+}
+````
 
 ##### File
 ```scala
@@ -72,73 +172,6 @@ server(8080) when {
   file("foo.req")
 }
 ```
-
-##### Version
-```scala
-server(8080) when {
-  version("HTTP/1.0")
-}
-```
-
-##### Header
-
-match by value
-```scala
-server(8080) when {
-  header("Content-Type") === "application/json"
-}
-```
-or by regex
-```scala
-server(8080) when {
-  header("Content-Type") matched ".+json"
-}
-```
-##### Query
-
-match by value
-```scala
-server(8080) when {
-   query("foo") === "bar"
-}
-```
-or by regex:
-```scala
-server(8080) when {
-   query("foo") matched ".+bar"
-}
-```
-
-##### Cookie
-
-match by value
-```scala
-server(8080) when {
-  cookie("foo") === "bar"
-}
-```
-  or by regex:
-```scala
-server(8080) when {
-  cookie("foo") matched ".+bar"
-}
-```
-
-##### Form
-
-you can do exact match by form value
-```scala
-server(8080) when {
-  form("foo") === "bar"
-}
-````
-or by match value with regex
-
-```scala
-server(8080) when {
-  form("foo") matched "ba.+"
-}
-````
 
 ##### Xml
 
@@ -333,15 +366,6 @@ server(8080) on {
 }
 ```
 
-#### Multiple matchers
-
-```scala
-server(8080) when {
-  uri("/hello") and method("post")
-} respond {
-  text("world")
-}
-```
 #### Multiple responses
 ```scala
 server(8080) when {
