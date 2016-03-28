@@ -232,5 +232,19 @@ class RequestMatchersTest extends FunSpec with BeforeAndAfter with RemoteTestHel
         }
       }
     }
+
+    describe("xml body matcher") {
+      it("matches by exact xml body") {
+        val theServer = server(port) when {
+          xml("<body>something</body>")
+        } respond {
+          status(200)
+        }
+
+        theServer running {
+          assert(postXmlForStatus("<body>something</body>") === 200)
+        }
+      }
+    }
   }
 }

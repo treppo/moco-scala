@@ -1,6 +1,7 @@
 package org.treppo.mocoscala.helper
 
 import org.apache.http.client.fluent.{Request, Response}
+import org.apache.http.entity.ContentType
 import org.apache.http.message.BasicNameValuePair
 import org.apache.http.{HttpVersion, ProtocolVersion}
 
@@ -24,6 +25,9 @@ trait RemoteTestHelper {
     case (name, value) =>
       content(Request.Post(root).bodyForm(new BasicNameValuePair(name, value)).execute)
   }
+
+  def postXmlForStatus(xml: String): Int =
+      status(Request.Post(root).bodyString(xml, ContentType.TEXT_XML).execute)
 
   def put(uri: String) = content(Request.Put(uri).execute)
 
