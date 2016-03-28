@@ -174,23 +174,23 @@ server(8080) when {
 ```
 
 ##### XML body matcher
-
+match by exact xml body
 ```scala
 server(8080) when {
   xml("<body>something</body>")
 }
 ```
 
-##### Xpath
-similarly, you can do exact match by value
+##### Xpath matchers
+match by exact xpath value
 ```scala
 server(8080) when {
   xpath("/request/parameters/id/text()") === "foo"
 }
 
 ```
-or match by regex
 
+match xpath value by regex
 ```scala
 server(8080) when {
   xpath("/request/parameters/id/text()") matched "fo.+"

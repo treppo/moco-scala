@@ -246,5 +246,32 @@ class RequestMatchersTest extends FunSpec with BeforeAndAfter with RemoteTestHel
         }
       }
     }
+
+    describe("xpath matchers") {
+      they("match by exact xpath value") {
+        val theServer = server(port) when {
+          xpath("/body/text()") === "foo"
+        } respond {
+          status(200)
+        }
+
+        theServer running {
+          assert(postXmlForStatus("<body>foo</body>") === 200)
+        }
+      }
+
+      they("match xpath value by regex") {
+        val theServer = server(port) when {
+          xpath("/body/text()") matched ".+foo"
+        } respond {
+          status(200)
+        }
+
+        theServer running {
+          assert(postXmlForStatus("<body>123-foo</body>") === 200)
+          assert(postXmlForStatus("<body>abc-foo</body>") === 200)
+        }
+      }
+    }
   }
 }
