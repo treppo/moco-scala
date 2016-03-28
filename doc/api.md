@@ -173,7 +173,7 @@ server(8080) when {
 }
 ```
 
-##### XML body matcher
+##### XML body matchers
 match by exact xml body
 ```scala
 server(8080) when {
@@ -181,7 +181,7 @@ server(8080) when {
 }
 ```
 
-##### Xpath matchers
+###### Xpath matchers
 match by exact xpath value
 ```scala
 server(8080) when {
@@ -198,15 +198,26 @@ server(8080) when {
 
 ```
 
-##### Json
+##### Json matchers
 ```scala
 server(8080) when {
   json("{\"foo\": \"bar\"}")
 }
 ```
-##### Jsonpath
-similar to xpath.
+###### Jsonpath matchers
+match by exact json path value
+```scala
+server(port) when {
+  jsonPath("$.foo") === "bar"
+}
+```
 
+match json value by regex
+```scala
+server(port) when {
+  jsonPath("$.foo") matched ".+bar"
+}
+```
 #### Response Apis:
 
 ##### Text

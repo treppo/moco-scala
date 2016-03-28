@@ -29,6 +29,9 @@ trait RemoteTestHelper {
   def postXmlForStatus(xml: String): Int =
       status(Request.Post(root).bodyString(xml, ContentType.TEXT_XML).execute)
 
+  def postJsonForStatus(json: String): Int =
+      status(Request.Post(root).bodyString(json, ContentType.APPLICATION_JSON).execute)
+
   def put(uri: String) = content(Request.Put(uri).execute)
 
   def delete(uri: String) = content(Request.Delete(uri).execute)

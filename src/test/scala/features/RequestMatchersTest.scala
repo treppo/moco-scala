@@ -245,31 +245,72 @@ class RequestMatchersTest extends FunSpec with BeforeAndAfter with RemoteTestHel
           assert(postXmlForStatus("<body>something</body>") === 200)
         }
       }
+
+      describe("xpath matchers") {
+        they("match by exact xpath value") {
+          val theServer = server(port) when {
+            xpath("/body/text()") === "foo"
+          } respond {
+            status(200)
+          }
+
+          theServer running {
+            assert(postXmlForStatus("<body>foo</body>") === 200)
+          }
+        }
+
+        they("match xpath value by regex") {
+          val theServer = server(port) when {
+            xpath("/body/text()") matched ".+foo"
+          } respond {
+            status(200)
+          }
+
+          theServer running {
+            assert(postXmlForStatus("<body>123-foo</body>") === 200)
+            assert(postXmlForStatus("<body>abc-foo</body>") === 200)
+          }
+        }
+      }
     }
 
-    describe("xpath matchers") {
-      they("match by exact xpath value") {
+    describe("json body matcher") {
+      it("matches by exact json body") {
         val theServer = server(port) when {
-          xpath("/body/text()") === "foo"
+          json("""{"foo":"bar"}""")
         } respond {
           status(200)
         }
 
         theServer running {
-          assert(postXmlForStatus("<body>foo</body>") === 200)
+          assert(postJsonForStatus("""{"foo":"bar"}""") === 200)
         }
       }
 
-      they("match xpath value by regex") {
-        val theServer = server(port) when {
-          xpath("/body/text()") matched ".+foo"
-        } respond {
-          status(200)
+      describe("jsonpath matchers") {
+        they("match by exact json path value") {
+          val theServer = server(port) when {
+            jsonPath("$.foo") === "bar"
+          } respond {
+            status(200)
+          }
+
+          theServer running {
+            assert(postJsonForStatus("""{"foo":"bar"}""") === 200)
+          }
         }
 
-        theServer running {
-          assert(postXmlForStatus("<body>123-foo</body>") === 200)
-          assert(postXmlForStatus("<body>abc-foo</body>") === 200)
+        they("match json value by regex") {
+          val theServer = server(port) when {
+            jsonPath("$.foo") matched ".+bar"
+          } respond {
+            status(200)
+          }
+
+          theServer running {
+            assert(postJsonForStatus("""{"foo":"123-bar"}""") === 200)
+            assert(postJsonForStatus("""{"foo":"abc-bar"}""") === 200)
+          }
         }
       }
     }
