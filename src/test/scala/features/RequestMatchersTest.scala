@@ -1,5 +1,7 @@
 package features
 
+import java.nio.charset.Charset
+
 import org.apache.http.HttpVersion
 import org.scalatest.{BeforeAndAfter, FunSpec}
 import org.treppo.mocoscala.dsl.Moco._
@@ -113,7 +115,7 @@ class RequestMatchersTest extends FunSpec with BeforeAndAfter with RemoteTestHel
 
       they("match content using a file") {
         val theServer = server(port) when {
-          file(getClass.getResource("/foo.request").getPath)
+          file(getClass.getResource("/foo_request.txt").getPath)
         } respond {
           text("text matched")
         }
@@ -245,8 +247,8 @@ class RequestMatchersTest extends FunSpec with BeforeAndAfter with RemoteTestHel
       }
     }
 
-    describe("xml body matcher") {
-      it("matches by exact xml body") {
+    describe("xml body matchers") {
+      they("match by exact xml body") {
         val theServer = server(port) when {
           xml("<body>something</body>")
         } respond {
@@ -255,6 +257,18 @@ class RequestMatchersTest extends FunSpec with BeforeAndAfter with RemoteTestHel
 
         theServer running {
           assert(postXmlForStatus("<body>something</body>") === 200)
+        }
+      }
+
+      they("match content using a file") {
+        val theServer = server(port) when {
+          xml(file(getClass.getResource("/foo_request.xml").getPath))
+        } respond {
+          text("text matched")
+        }
+
+        theServer running {
+          assert(post("<body>something</body>") === "text matched")
         }
       }
 
@@ -286,8 +300,8 @@ class RequestMatchersTest extends FunSpec with BeforeAndAfter with RemoteTestHel
       }
     }
 
-    describe("json body matcher") {
-      it("matches by exact json body") {
+    describe("json body matchers") {
+      they("match by exact json body") {
         val theServer = server(port) when {
           json("""{"foo":"bar"}""")
         } respond {
@@ -296,6 +310,18 @@ class RequestMatchersTest extends FunSpec with BeforeAndAfter with RemoteTestHel
 
         theServer running {
           assert(postJsonForStatus("""{"foo":"bar"}""") === 200)
+        }
+      }
+
+      they("match content using a file") {
+        val theServer = server(port) when {
+          json(file(getClass.getResource("/foo_request.json").getPath))
+        } respond {
+          text("text matched")
+        }
+
+        theServer running {
+          assert(post("""{"foo": "bar"}""") === "text matched")
         }
       }
 

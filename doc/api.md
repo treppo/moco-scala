@@ -181,6 +181,13 @@ server(port) when {
 }
 ```
 
+match content using a file
+```scala
+server(port) when {
+  xml(file(getClass.getResource("/foo_request.xml").getPath))
+}
+```
+
 ###### Xpath matchers
 match by exact xpath value
 ```scala
@@ -204,6 +211,13 @@ server(port) when {
   json("{\"foo\": \"bar\"}")
 }
 ```
+
+match content using a file
+```scala
+server(port) when {
+  json(file(getClass.getResource("/foo_request.json").getPath))
+}
+```
 ###### Jsonpath matchers
 match by exact json path value
 ```scala
@@ -218,6 +232,8 @@ server(port) when {
   jsonPath("$.foo") matched ".+bar"
 }
 ```
+
+
 #### Response Apis:
 
 ##### Text

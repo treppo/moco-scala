@@ -1,5 +1,6 @@
 package org.treppo.mocoscala.dsl
 
+import java.nio.charset.Charset
 import java.util.concurrent.TimeUnit
 
 import com.github.dreamhead.moco.config.{MocoContextConfig, MocoFileRootConfig}
