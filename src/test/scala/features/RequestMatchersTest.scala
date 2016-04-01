@@ -85,7 +85,7 @@ class RequestMatchersTest extends FunSpec with BeforeAndAfter with RemoteTestHel
       }
     }
 
-    describe("text body matchers") {
+    describe("content matchers") {
       they("match by text") {
         val theServer = server(port) when {
           text("hello")
@@ -108,6 +108,18 @@ class RequestMatchersTest extends FunSpec with BeforeAndAfter with RemoteTestHel
         theServer running {
           assert(post("hello-abc") === "text matched")
           assert(post("hello-123") === "text matched")
+        }
+      }
+
+      they("match content using a file") {
+        val theServer = server(port) when {
+          file(getClass.getResource("/foo.request").getPath)
+        } respond {
+          text("text matched")
+        }
+
+        theServer running {
+          assert(post("a foo request") === "text matched")
         }
       }
     }

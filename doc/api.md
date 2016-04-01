@@ -17,14 +17,14 @@ Current moco support two global configurations: [file root](https://github.com/d
 ```scala
 import org.treppo.mocoscala.dsl.Moco._
 
-server(8080) configs {
+server(port) configs {
   fileRoot("src/test/resources")
 }
 ```
 
 ###### context
 ```scala
-server(8080) configs {
+server(port) configs {
   context("/hello")
 }
 ```
@@ -34,14 +34,14 @@ server(8080) configs {
 
 match by URI
 ```scala
-server(8080) when {
+server(port) when {
   uri("/hello")
 }
 ```
 
 match URI by Regex
 ```scala
-server(8080) when {
+server(port) when {
   uri matched "/hello.+"
 }
 ```
@@ -50,7 +50,7 @@ server(8080) when {
 
 chain multiple matchers with same response
 ```scala
-server(8080) when {
+server(port) when {
   uri("/hello") and method("post")
 } respond {
   text("world")
@@ -73,24 +73,31 @@ server(port) when {
 
 ##### Request method matcher
 ```scala
-server(8080) when {
+server(port) when {
   method("get")
 }
 ```
 
-##### Text body matchers
+##### Content matchers
 
 match by exact body text
 ```scala
-server(8080) when {
+server(port) when {
   text("foo")
 }
 ```
 
 match body text by regex
 ```scala
-server(8080) when {
+server(port) when {
   text matched "hello.+"
+}
+```
+
+match content using a file
+```scala
+server(port) when {
+  file(getClass.getResource("/foo.request").getPath)
 }
 ```
 
@@ -98,14 +105,14 @@ server(8080) when {
 
 match by exact value
 ```scala
-server(8080) when {
+server(port) when {
    query("foo") === "bar"
 }
 ```
 
 match value by regex
 ```scala
-server(8080) when {
+server(port) when {
    query("foo") matched ".+bar"
 }
 ```
@@ -114,21 +121,21 @@ server(8080) when {
 
 match by exact header value
 ```scala
-server(8080) when {
+server(port) when {
   header("Content-Type") === "application/json"
 }
 ```
 
 match header values by regex
 ```scala
-server(8080) when {
+server(port) when {
   header("Content-Type") matched ".+json"
 }
 ```
 
 ##### HTTP version matcher
 ```scala
-server(8080) when {
+server(port) when {
   version("HTTP/1.0")
 }
 ```
@@ -137,14 +144,14 @@ server(8080) when {
 
 match by exact value
 ```scala
-server(8080) when {
+server(port) when {
   cookie("foo") === "bar"
 }
 ```
 
 match cookie value by regex:
 ```scala
-server(8080) when {
+server(port) when {
   cookie("foo") matched ".+bar"
 }
 ```
@@ -153,7 +160,7 @@ server(8080) when {
 
 match by exact form value
 ```scala
-server(8080) when {
+server(port) when {
   form("foo") === "bar"
 }
 ````
@@ -161,22 +168,15 @@ server(8080) when {
 match value by regex
 
 ```scala
-server(8080) when {
+server(port) when {
   form("foo") matched "ba.+"
 }
 ````
 
-##### File
-```scala
-server(8080) when {
-  file("foo.req")
-}
-```
-
 ##### XML body matchers
 match by exact xml body
 ```scala
-server(8080) when {
+server(port) when {
   xml("<body>something</body>")
 }
 ```
@@ -184,7 +184,7 @@ server(8080) when {
 ###### Xpath matchers
 match by exact xpath value
 ```scala
-server(8080) when {
+server(port) when {
   xpath("/request/parameters/id/text()") === "foo"
 }
 
@@ -192,7 +192,7 @@ server(8080) when {
 
 match xpath value by regex
 ```scala
-server(8080) when {
+server(port) when {
   xpath("/request/parameters/id/text()") matched "fo.+"
 }
 
@@ -200,7 +200,7 @@ server(8080) when {
 
 ##### Json matchers
 ```scala
-server(8080) when {
+server(port) when {
   json("{\"foo\": \"bar\"}")
 }
 ```
@@ -303,7 +303,7 @@ respond {
 Proxy also support proxying a batch of URLs in the same context
 
 ```scala
-server(8080) when {
+server(port) when {
   method("GET") and uri matched "/proxy/.*"
 } respond {
   proxy {
@@ -316,7 +316,7 @@ server(8080) when {
 You can simply redirect a request to a different location:
 
 ```scala
-server(8080) when {
+server(port) when {
   uri("/redirect")
 } respond {
   redirectTo("/target")
@@ -356,7 +356,7 @@ respond {
 You can specify a subsequent action once the response was sent:
 
 ```scala
-server(8080) on {
+server(port) on {
   complete{
     get("http://another_site")
   }
@@ -368,7 +368,7 @@ server(8080) on {
 You can use the async api to fire events asynchronsously
 
 ```scala
-server(8080) on {
+server(port) on {
   complete {
     async {
       get("http://another_site")
@@ -379,7 +379,7 @@ server(8080) on {
 
 #### Multiple responses
 ```scala
-server(8080) when {
+server(port) when {
   uri("/not-exits")
 } respond {
   status(400) and text("BAD REQUEST")
@@ -389,7 +389,7 @@ server(8080) when {
 #### Multiple behaviours
 
 ```scala
-server(8080) when {
+server(port) when {
   method("get")
 } respond {
   text("get")
