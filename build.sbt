@@ -16,3 +16,5 @@ libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "2.2.6" % Test,
   "org.scalamock" %% "scalamock-scalatest-support" % "3.2.2" % Test
 )
+
+testOptions in Test += Tests.Argument("-oD")
