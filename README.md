@@ -7,7 +7,6 @@ This is a scala wrapper for [moco](https://github.com/dreamhead/moco), based on 
 [moco-scala](https://github.com/nicholasren/moco-scala) by Nicholas Ren.
 In contrast to the the previous versions by Nicholas, the Moco server does not have mutable state.
 
-
 ## How to use
 ### Add dependency
 ```sbt
@@ -24,9 +23,7 @@ val theServer = server(8080) when { uri("/hello") } respond { status(200) }
 
 // Running server and test your stuff
 theServer running  {
-  import org.treppo.mocoscala.helper.RemoteTestHelper
-
-  assert(getForStatus(remoteUrl("/hello")) === 200)
+  assert(SomeHttpClient().url("http://localhost:8080").get.status === 200)
 }
 ```
 
