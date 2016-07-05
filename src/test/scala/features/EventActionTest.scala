@@ -1,5 +1,7 @@
 package features
 
+import java.net.URI
+
 import com.github.dreamhead.moco.MocoEventAction
 import org.mockito.Mockito._
 import org.scalatest.FunSpec
@@ -9,21 +11,19 @@ import org.treppo.mocoscala.helper.RemoteTestHelper
 
 class EventActionTest extends FunSpec with RemoteTestHelper with MockitoSugar {
 
-  override val port = 8083
-
   describe("on complete") {
 
     it("perform predefined action") {
       val action = mock[MocoEventAction]
 
-      val theServer = server(port) respond {
+      val theServer = server respond {
         text("foo")
       } on {
         complete(action)
       }
 
-      theServer running {
-        assert(getRoot === "foo")
+      theServer running { url: URI =>
+        assert(get(url) === "foo")
       }
 
       verify(action).execute()

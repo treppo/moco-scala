@@ -1,5 +1,7 @@
 package org.treppo.mocoscala.helper
 
+import java.net.URI
+
 import org.apache.http.client.fluent.{Request, Response}
 import org.apache.http.entity.ContentType
 import org.apache.http.message.BasicNameValuePair
@@ -15,10 +17,13 @@ trait RemoteTestHelper {
 
   def getPath(uri: String): String = content(executeGetPath(uri))
   def get(uri: String): String = content(executeGet(uri))
+  def get(uri: URI): String = content(executeGet(uri.toString))
 
   def post(body: String): String = postBody(baseUrl(), body)
 
-  def post: String = postBody(baseUrl(), "")
+  def postRoot: String = postBody(baseUrl(), "")
+
+  def post(url: URI): String = postBody(url.toString, "")
 
   def post(uri: String, body: String): String =
     postBody(baseUrl() + uri, body)

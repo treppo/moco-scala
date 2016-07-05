@@ -1,6 +1,7 @@
 package org.treppo.mocoscala
 package dsl
 
+import java.net.URI
 import java.util.concurrent.TimeUnit
 
 import com.github.dreamhead.moco.config.{MocoContextConfig, MocoFileRootConfig}
@@ -147,10 +148,10 @@ case class Moco(port: Int = RandomPort.get,
     }
   }
 
-  def running[T](testFun: String => T): T = {
+  def running[T](testFun: URI => T): T = {
     val theServer = startServer
     try {
-      testFun(s"http://localhost:$port")
+      testFun(new URI(s"http://localhost:$port"))
     } finally {
       theServer.stop()
     }

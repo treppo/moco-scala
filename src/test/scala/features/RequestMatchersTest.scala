@@ -1,5 +1,7 @@
 package features
 
+import java.net.URI
+
 import org.apache.http.HttpVersion
 import org.scalatest.{BeforeAndAfter, FunSpec}
 import org.treppo.mocoscala.dsl.Moco._
@@ -27,15 +29,15 @@ class RequestMatchersTest extends FunSpec with BeforeAndAfter with RemoteTestHel
       }
 
       they("match uri by regex") {
-        val theServer = server(port) when {
+        val theServer = server when {
           uri matched "/hello.+"
         } respond {
           text("world")
         }
 
-        theServer running {
-          assert(getPath("/hello123") === "world")
-          assert(getPath("/hello-abc") === "world")
+        theServer running { url: URI =>
+          assert(get(url.resolve("/hello123")) === "world")
+          assert(get(url.resolve("/hello-abc")) === "world")
         }
       }
     }
@@ -64,23 +66,23 @@ class RequestMatchersTest extends FunSpec with BeforeAndAfter with RemoteTestHel
           text("post")
         }
 
-        theServer running {
-          assert(getRoot === "get")
-          assert(post === "post")
+        theServer running { url: URI =>
+          assert(get(url) === "get")
+          assert(post(url) === "post")
         }
       }
     }
 
     describe("request method matcher") {
       it("matches by method") {
-        val theServer = server(port) when {
+        val theServer = server when {
           method("get")
         } respond {
           text("get")
         }
 
-        theServer running {
-          assert(getRoot === "get")
+        theServer running { url: URI =>
+          assert(get(url) === "get")
         }
       }
     }
