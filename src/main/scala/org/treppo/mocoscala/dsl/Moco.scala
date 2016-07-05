@@ -1,19 +1,17 @@
 package org.treppo.mocoscala.dsl
 
-import java.nio.charset.Charset
 import java.util.concurrent.TimeUnit
 
 import com.github.dreamhead.moco.config.{MocoContextConfig, MocoFileRootConfig}
 import com.github.dreamhead.moco.extractor.{ContentRequestExtractor, UriRequestExtractor}
+import com.github.dreamhead.moco.handler.AndResponseHandler
 import com.github.dreamhead.moco.handler.failover.Failover
 import com.github.dreamhead.moco.handler.proxy.ProxyConfig
-import com.github.dreamhead.moco.handler.{AndResponseHandler, SequenceContentHandler}
 import com.github.dreamhead.moco.internal.{ActualHttpServer, MocoHttpServer}
 import com.github.dreamhead.moco.matcher.AndRequestMatcher
 import com.github.dreamhead.moco.procedure.LatencyProcedure
 import com.github.dreamhead.moco.resource.{ContentResource, Resource}
 import com.github.dreamhead.moco.{Moco => JMoco, _}
-import com.google.common.collect.ImmutableList
 import com.google.common.net.HttpHeaders
 import io.netty.handler.codec.http.HttpResponseStatus
 import org.treppo.mocoscala.wrapper.{ExtractorMatcher, PartialRule, Rule}
@@ -32,14 +30,14 @@ object Moco {
 
   implicit def toHandler(procedure: MocoProcedure): ResponseHandler = JMoco.`with`(procedure)
 
-  implicit def toCompositeMocoConfig(config: MocoConfig[_]): CompositeMocoConfig = new CompositeMocoConfig(Seq(config))
+  implicit def toCompositeMocoConfig(config: MocoConfig[_]): CompositeMocoConfig = CompositeMocoConfig(Seq(config))
 
   implicit val failover: Failover = Failover.DEFAULT_FAILOVER
 
   implicit class RichResource(target: Resource) {
-    def and(handler: ResponseHandler): ResponseHandler = new AndResponseHandler(Seq[ResponseHandler](handler, target))
+    def and(handler: ResponseHandler): ResponseHandler = AndResponseHandler.and(Seq[ResponseHandler](handler, target))
 
-    def and(matcher: RequestMatcher): RequestMatcher = new AndRequestMatcher(Seq[RequestMatcher](matcher, target))
+    def and(matcher: RequestMatcher): RequestMatcher = JMoco.and(matcher)
 
     def and(resource: Resource): RequestMatcher = new AndRequestMatcher(Seq[RequestMatcher](resource, target))
   }
@@ -49,7 +47,7 @@ object Moco {
   }
 
   implicit class RichResponseHandler(target: ResponseHandler) {
-    def and(handler: ResponseHandler): ResponseHandler = new AndResponseHandler(Seq(handler, target))
+    def and(handler: ResponseHandler): ResponseHandler = AndResponseHandler.and(Seq(handler, target))
   }
 
   def fileRoot(path: String): MocoConfig[_] = new MocoFileRootConfig(path)
@@ -70,21 +68,21 @@ object Moco {
 
   def version(value: String): Resource = JMoco.version(value)
 
-  def header(name: String): ExtractorMatcher = new ExtractorMatcher(JMoco.header(name))
+  def header(name: String): ExtractorMatcher = ExtractorMatcher(JMoco.header(name))
 
-  def query(name: String): ExtractorMatcher = new ExtractorMatcher(JMoco.query(name))
+  def query(name: String): ExtractorMatcher = ExtractorMatcher(JMoco.query(name))
 
-  def cookie(name: String): ExtractorMatcher = new ExtractorMatcher(JMoco.cookie(name))
+  def cookie(name: String): ExtractorMatcher = ExtractorMatcher(JMoco.cookie(name))
 
-  def uri: ExtractorMatcher = new ExtractorMatcher(new UriRequestExtractor)
+  def uri: ExtractorMatcher = ExtractorMatcher(new UriRequestExtractor)
 
-  def text: ExtractorMatcher = new ExtractorMatcher(new ContentRequestExtractor)
+  def text: ExtractorMatcher = ExtractorMatcher(new ContentRequestExtractor)
 
-  def form(key: String): ExtractorMatcher = new ExtractorMatcher(JMoco.form(key))
+  def form(key: String): ExtractorMatcher = ExtractorMatcher(JMoco.form(key))
 
-  def xpath(path: String): ExtractorMatcher = new ExtractorMatcher(JMoco.xpath(path))
+  def xpath(path: String): ExtractorMatcher = ExtractorMatcher(JMoco.xpath(path))
 
-  def jsonPath(path: String): ExtractorMatcher = new ExtractorMatcher(JMoco.jsonPath(path))
+  def jsonPath(path: String): ExtractorMatcher = ExtractorMatcher(JMoco.jsonPath(path))
 
   def xml(content: Resource): RequestMatcher = JMoco.xml(content)
 
@@ -99,19 +97,16 @@ object Moco {
   def redirectTo(uri: String): ResponseHandler =
     status(HttpResponseStatus.FOUND.code()) and headers(HttpHeaders.LOCATION -> uri)
 
-  def seq(resources: Resource*): ResponseHandler = {
-    val handlers = ImmutableList.builder[ResponseHandler].addAll(resources.map(toHandler)).build
-    new SequenceContentHandler(handlers)
-  }
+  def seq(resources: Resource*): ResponseHandler = JMoco.seq(resources.map(toHandler): _*)
 
   def headers(headers: (String, String)*): ResponseHandler = {
     val handlers = headers.map { case (name, value) => JMoco.header(name, value) }
-    new AndResponseHandler(handlers)
+    AndResponseHandler.and(handlers)
   }
 
   def cookies(cookies: (String, String)*): ResponseHandler = {
     val handlers = cookies.map { case (name, value) => JMoco.cookie(name, value) }
-    new AndResponseHandler(handlers)
+    AndResponseHandler.and(handlers)
   }
 
   def proxy(url: String)(implicit failover: Failover) = JMoco.proxy(url, failover)
@@ -167,10 +162,9 @@ case class Moco(port: Int = 8080,
   }
 
   private def replay: ActualHttpServer = {
-    val server = if (confs.isEmpty)
-      JMoco.httpServer(port).asInstanceOf[ActualHttpServer]
-    else
-      JMoco.httpServer(port, confs: _*).asInstanceOf[ActualHttpServer]
+    val server =
+      if (confs.isEmpty) JMoco.httpServer(port).asInstanceOf[ActualHttpServer]
+      else JMoco.httpServer(port, confs: _*).asInstanceOf[ActualHttpServer]
 
     rules.foreach {
       case Rule(Some(matcher), handler) => server.request(matcher).response(handler)

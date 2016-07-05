@@ -10,7 +10,7 @@ In contrast to the the previous versions by Nicholas, the Moco server does not h
 ## How to use
 ### Add dependency
 ```sbt
-libraryDependencies += "org.treppo" %% "moco-scala" % "0.5.1" % Test
+libraryDependencies += "org.treppo" %% "moco-scala" % "0.5.2" % Test
 ```
 
 ### Quick Start

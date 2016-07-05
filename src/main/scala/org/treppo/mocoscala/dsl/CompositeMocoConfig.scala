@@ -1,7 +1,7 @@
 package org.treppo.mocoscala.dsl
 
-import com.github.dreamhead.moco.{Moco => JMoco, _}
+import com.github.dreamhead.moco.MocoConfig
 
 case class CompositeMocoConfig(items: Seq[MocoConfig[_]]) {
-  def and(config: MocoConfig[_]): CompositeMocoConfig = new CompositeMocoConfig(config +: items)
+  def and(config: MocoConfig[_]): CompositeMocoConfig = copy(config +: items)
 }

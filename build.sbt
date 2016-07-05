@@ -2,7 +2,7 @@ name := "moco-scala"
 
 organization := "org.treppo"
 
-version := "0.5.1"
+version := "0.5.2"
 
 scalaVersion := "2.11.8"
 
@@ -11,7 +11,7 @@ scalacOptions in ThisBuild ++= Seq("-unchecked", "-deprecation", "-feature", "-X
 crossScalaVersions := Seq("2.10.6", "2.11.8")
 
 libraryDependencies ++= Seq(
-  "com.github.dreamhead" % "moco-core" % "0.10.2" exclude("org.apache.httpcomponents", "httpclient"),
+  "com.github.dreamhead" % "moco-core" % "0.11.0" exclude("org.apache.httpcomponents", "httpclient"),
   "org.apache.httpcomponents" % "fluent-hc" % "4.5.2" % Test,
   "org.scalatest" %% "scalatest" % "2.2.6" % Test,
   "org.scalamock" %% "scalamock-scalatest-support" % "3.2.2" % Test
