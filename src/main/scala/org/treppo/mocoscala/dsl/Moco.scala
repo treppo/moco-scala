@@ -1,4 +1,5 @@
-package org.treppo.mocoscala.dsl
+package org.treppo.mocoscala
+package dsl
 
 import java.util.concurrent.TimeUnit
 

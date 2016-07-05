@@ -1,4 +1,5 @@
-package org.treppo.mocoscala.dsl
+package org.treppo.mocoscala
+package dsl
 
 import com.github.dreamhead.moco.MocoConfig
 

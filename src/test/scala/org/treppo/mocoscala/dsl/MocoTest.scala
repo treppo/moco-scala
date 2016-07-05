@@ -1,4 +1,5 @@
-package org.treppo.mocoscala.dsl
+package org.treppo.mocoscala
+package dsl
 
 import java.util.concurrent.TimeUnit
 
@@ -18,7 +19,7 @@ class MocoTest extends FlatSpec with MockitoSugar {
   "a config api" should "capture multiple configs" in {
     val conf1 = mock[MocoConfig[_]]
     val conf2 = mock[MocoConfig[_]]
-    val configs = new CompositeMocoConfig(Seq(conf1, conf2))
+    val configs = CompositeMocoConfig(Seq(conf1, conf2))
 
     val server = Moco().configs(configs)
 
