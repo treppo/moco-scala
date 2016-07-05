@@ -6,11 +6,9 @@ import org.treppo.mocoscala.helper.RemoteTestHelper
 
 class ConfigTest extends FunSpec with RemoteTestHelper {
 
-  override val port = 8082
-
   describe("file root configuration") {
     it("serves files from file root") {
-      val theServer = server(port) configs {
+      val theServer = server configs {
         fileRoot("src/test/resources")
       } when {
         method("get")
@@ -18,15 +16,15 @@ class ConfigTest extends FunSpec with RemoteTestHelper {
         file("bar.response")
       }
 
-      theServer running {
-        assert(get === "bar")
+      theServer running { url: String =>
+        assert(get(url) === "bar")
       }
     }
   }
 
   describe("context configuration") {
     it("responds in configured context") {
-      val theServer = server(port) configs {
+      val theServer = server configs {
         context("/hello")
       } when {
         method("get")
@@ -34,8 +32,8 @@ class ConfigTest extends FunSpec with RemoteTestHelper {
         text("world")
       }
 
-      theServer running {
-        assert(get("/hello") === "world")
+      theServer running { url: String =>
+        assert(get(url + "/hello") === "world")
       }
     }
   }

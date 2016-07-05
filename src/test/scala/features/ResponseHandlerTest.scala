@@ -19,7 +19,7 @@ class ResponseHandlerTest extends FunSpec with BeforeAndAfter with RemoteTestHel
       }
 
       theServer running {
-        assert(get === "default")
+        assert(getRoot === "default")
       }
     }
   }
@@ -37,7 +37,7 @@ class ResponseHandlerTest extends FunSpec with BeforeAndAfter with RemoteTestHel
       }
 
       theServer running {
-        assert(get("/redirect") === "foo")
+        assert(getPath("/redirect") === "foo")
       }
     }
   }
@@ -69,7 +69,7 @@ class ResponseHandlerTest extends FunSpec with BeforeAndAfter with RemoteTestHel
       }
 
       theServer running {
-        assert(get === "get")
+        assert(getRoot === "get")
       }
     }
 
@@ -94,9 +94,9 @@ class ResponseHandlerTest extends FunSpec with BeforeAndAfter with RemoteTestHel
       }
 
       theServer running {
-        assert(get === "foo")
-        assert(get === "bar")
-        assert(get === "baz")
+        assert(getRoot === "foo")
+        assert(getRoot === "bar")
+        assert(getRoot === "baz")
       }
     }
 
@@ -109,7 +109,7 @@ class ResponseHandlerTest extends FunSpec with BeforeAndAfter with RemoteTestHel
 
       theServer running {
         assert(getForStatus === 201)
-        assert(get === "hello")
+        assert(getRoot === "hello")
       }
     }
 

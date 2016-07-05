@@ -57,6 +57,8 @@ object Moco {
 
   def server(port: Int): Moco = Moco(port)
 
+  def server: Moco = Moco()
+
   def uri(value: String): Resource = JMoco.uri(value)
 
   def method(value: String): Resource = JMoco.method(value)
@@ -131,8 +133,7 @@ object Moco {
   def post(url: String, content: ContentResource) = JMoco.post(url, content)
 }
 
-
-case class Moco(port: Int = 8080,
+case class Moco(port: Int = RandomPort.get,
                 triggers: List[MocoEventTrigger] = List(),
                 confs: Seq[MocoConfig[_]] = Seq(),
                 rules: List[Rule] = List()) {
@@ -141,6 +142,15 @@ case class Moco(port: Int = 8080,
     val theServer = startServer
     try {
       testFun
+    } finally {
+      theServer.stop()
+    }
+  }
+
+  def running[T](testFun: String => T): T = {
+    val theServer = startServer
+    try {
+      testFun(s"http://localhost:$port")
     } finally {
       theServer.stop()
     }

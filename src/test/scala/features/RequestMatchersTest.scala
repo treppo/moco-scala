@@ -1,7 +1,5 @@
 package features
 
-import java.nio.charset.Charset
-
 import org.apache.http.HttpVersion
 import org.scalatest.{BeforeAndAfter, FunSpec}
 import org.treppo.mocoscala.dsl.Moco._
@@ -9,7 +7,7 @@ import org.treppo.mocoscala.helper.RemoteTestHelper
 
 class RequestMatchersTest extends FunSpec with BeforeAndAfter with RemoteTestHelper {
 
-  val port = 8081
+  override val port = 8081
 
   describe("request matchers") {
 
@@ -36,8 +34,8 @@ class RequestMatchersTest extends FunSpec with BeforeAndAfter with RemoteTestHel
         }
 
         theServer running {
-          assert(get("/hello123") === "world")
-          assert(get("/hello-abc") === "world")
+          assert(getPath("/hello123") === "world")
+          assert(getPath("/hello-abc") === "world")
         }
       }
     }
@@ -67,7 +65,7 @@ class RequestMatchersTest extends FunSpec with BeforeAndAfter with RemoteTestHel
         }
 
         theServer running {
-          assert(get === "get")
+          assert(getRoot === "get")
           assert(post === "post")
         }
       }
@@ -82,7 +80,7 @@ class RequestMatchersTest extends FunSpec with BeforeAndAfter with RemoteTestHel
         }
 
         theServer running {
-          assert(get === "get")
+          assert(getRoot === "get")
         }
       }
     }
@@ -135,7 +133,7 @@ class RequestMatchersTest extends FunSpec with BeforeAndAfter with RemoteTestHel
         }
 
         theServer running {
-          assert(get("/hello?foo=bar") === "bar")
+          assert(getPath("/hello?foo=bar") === "bar")
         }
       }
 
@@ -147,8 +145,8 @@ class RequestMatchersTest extends FunSpec with BeforeAndAfter with RemoteTestHel
         }
 
         theServer running {
-          assert(get("/hello?foo=123-bar") === "bar")
-          assert(get("/hello?foo=abc-bar") === "bar")
+          assert(getPath("/hello?foo=123-bar") === "bar")
+          assert(getPath("/hello?foo=abc-bar") === "bar")
         }
       }
     }

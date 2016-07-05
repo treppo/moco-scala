@@ -7,64 +7,66 @@ import org.apache.http.{HttpVersion, ProtocolVersion}
 
 trait RemoteTestHelper {
 
-  val port: Int
-  private lazy val root = s"http://localhost:$port"
+  val port: Int = 9999
+  private def baseUrl(port: Int = port) = s"http://localhost:$port"
 
-  def get: String = content(executeGet())
+  def getRoot: String = content(executeGetPath())
+  def getRoot(port: Int): String = content(executeGetPath(port = port))
 
+  def getPath(uri: String): String = content(executeGetPath(uri))
   def get(uri: String): String = content(executeGet(uri))
 
-  def post(body: String): String = postBody(root, body)
+  def post(body: String): String = postBody(baseUrl(), body)
 
-  def post: String = postBody(root, "")
+  def post: String = postBody(baseUrl(), "")
 
   def post(uri: String, body: String): String =
-    postBody(root + uri, body)
+    postBody(baseUrl() + uri, body)
 
   def postForm(form: (String, String)) = form match {
     case (name, value) =>
-      content(Request.Post(root).bodyForm(new BasicNameValuePair(name, value)).execute)
+      content(Request.Post(baseUrl()).bodyForm(new BasicNameValuePair(name, value)).execute)
   }
 
   def postXmlForStatus(xml: String): Int =
-      status(Request.Post(root).bodyString(xml, ContentType.TEXT_XML).execute)
+      status(Request.Post(baseUrl()).bodyString(xml, ContentType.TEXT_XML).execute)
 
   def postJsonForStatus(json: String): Int =
-      status(Request.Post(root).bodyString(json, ContentType.APPLICATION_JSON).execute)
+      status(Request.Post(baseUrl()).bodyString(json, ContentType.APPLICATION_JSON).execute)
 
   def put(uri: String) = content(Request.Put(uri).execute)
 
   def delete(uri: String) = content(Request.Delete(uri).execute)
 
-  def getForStatus = status(executeGet())
+  def getForStatus = status(executeGetPath())
 
-  def getForStatus(uri: String) = status(executeGet(uri))
+  def getForStatus(uri: String) = status(executeGetPath(uri))
 
   def getWithHeaders(headers: (String, String)*) = {
-    val get = Request.Get(root)
+    val get = Request.Get(baseUrl())
     headers.foreach { case (name, value) => get.addHeader(name, value) }
     content(get.execute)
   }
 
   def getForStatusWithCookie(cookie: (String, String)) = cookie match {
-    case (name, value) => status(Request.Get(root).addHeader("Cookie", s"$name=$value").execute)
+    case (name, value) => status(Request.Get(baseUrl()).addHeader("Cookie", s"$name=$value").execute)
   }
 
   def getForStatusWithHeaders(headers: (String, String)*) = {
-    val get = Request.Get(root)
+    val get = Request.Get(baseUrl())
     headers.foreach { case (name, value) => get.addHeader(name, value) }
     status(get.execute)
   }
 
   def getForHeader(headerName: String): String = {
-    executeGet().returnResponse.getFirstHeader(headerName).getValue
+    executeGetPath().returnResponse.getFirstHeader(headerName).getValue
   }
 
   def getWithVersion(version: HttpVersion): String =
-    Request.Get(root).version(version).execute.returnContent.asString
+    Request.Get(baseUrl()).version(version).execute.returnContent.asString
 
   def getForVersion: ProtocolVersion =
-    executeGet().returnResponse.getProtocolVersion
+    executeGetPath().returnResponse.getProtocolVersion
 
   private def content(response: Response): String =
     response.returnContent().asString
@@ -75,6 +77,9 @@ trait RemoteTestHelper {
   private def status(response: Response): Int =
     response.returnResponse.getStatusLine.getStatusCode
 
-  private def executeGet(uri: String = ""): Response =
-    Request.Get(root + uri).execute
+  private def executeGetPath(uri: String = "", port: Int = port): Response =
+    Request.Get(baseUrl(port) + uri).execute
+
+  private def executeGet(url: String = ""): Response =
+    Request.Get(url).execute
 }

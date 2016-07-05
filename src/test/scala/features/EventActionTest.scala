@@ -23,7 +23,7 @@ class EventActionTest extends FunSpec with RemoteTestHelper with MockitoSugar {
       }
 
       theServer running {
-        assert(get === "foo")
+        assert(getRoot === "foo")
       }
 
       verify(action).execute()
