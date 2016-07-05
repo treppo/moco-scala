@@ -1,4 +1,6 @@
-package features
+package org.treppo.mocoscala.features
+
+import java.net.URI
 
 import org.scalatest.FunSpec
 import org.treppo.mocoscala.dsl.Moco._
@@ -20,8 +22,8 @@ class PortTest extends FunSpec with RemoteTestHelper {
         text("server b")
       }
 
-      serverA running { urlA: String =>
-        serverB running { urlB: String =>
+      serverA running { urlA: URI =>
+        serverB running { urlB: URI =>
           assert(get(urlB) === "server b")
         }
       }
@@ -37,8 +39,8 @@ class PortTest extends FunSpec with RemoteTestHelper {
         text("server a")
       }
 
-      theServer running {
-          assert(getRoot(port) === "server a")
+      theServer running { uri: URI =>
+        assert(getRoot(uri) === "server a")
       }
     }
   }

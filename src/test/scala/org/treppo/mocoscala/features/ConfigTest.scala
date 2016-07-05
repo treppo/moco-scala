@@ -1,4 +1,4 @@
-package features
+package org.treppo.mocoscala.features
 
 import java.net.URI
 

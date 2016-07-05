@@ -139,23 +139,8 @@ case class Moco(port: Int = RandomPort.get,
                 confs: Seq[MocoConfig[_]] = Seq(),
                 rules: List[Rule] = List()) {
 
-  def running[T](testFun: => T): T = {
-    val theServer = startServer
-    try {
-      testFun
-    } finally {
-      theServer.stop()
-    }
-  }
-
-  def running[T](testFun: URI => T): T = {
-    val theServer = startServer
-    try {
-      testFun(new URI(s"http://localhost:$port"))
-    } finally {
-      theServer.stop()
-    }
-  }
+  def running[T](testFun: => T): T = withServer(testFun)
+  def running[T](testFun: URI => T): T = withServer(testFun(new URI(s"http://localhost:$port")))
 
   def when(matcher: RequestMatcher): PartialRule = new PartialRule(matcher, this)
 
@@ -167,10 +152,14 @@ case class Moco(port: Int = RandomPort.get,
 
   def record(rule: Rule): Moco = copy(rules = rule :: rules)
 
-  private def startServer: MocoHttpServer = {
+  private def withServer[T](block: => T): T = {
     val theServer = new MocoHttpServer(replay)
     theServer.start()
-    theServer
+    try {
+      block
+    } finally {
+      theServer.stop()
+    }
   }
 
   private def replay: ActualHttpServer = {

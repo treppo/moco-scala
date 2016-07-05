@@ -1,4 +1,4 @@
-package features
+package org.treppo.mocoscala.features
 
 import java.net.URI
 
@@ -28,7 +28,5 @@ class EventActionTest extends FunSpec with RemoteTestHelper with MockitoSugar {
 
       verify(action).execute()
     }
-
   }
-
 }

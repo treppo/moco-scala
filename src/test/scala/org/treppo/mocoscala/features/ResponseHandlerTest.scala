@@ -1,5 +1,6 @@
-package features
+package org.treppo.mocoscala.features
 
+import java.net.URI
 import java.util.concurrent.TimeUnit
 
 import org.scalatest.{BeforeAndAfter, FunSpec}
@@ -10,23 +11,21 @@ import scala.concurrent.duration.Duration
 
 class ResponseHandlerTest extends FunSpec with BeforeAndAfter with RemoteTestHelper {
 
-  override val port = 8080
-
   describe("default") {
     it("send default response") {
-      val theServer = server(port) respond {
+      val theServer = server respond {
         text("default")
       }
 
-      theServer running {
-        assert(getRoot === "default")
+      theServer running { uri: URI =>
+        assert(get(uri) === "default")
       }
     }
   }
 
   describe("redirect") {
     it("redirect to expected url") {
-      val theServer = server(port) when {
+      val theServer = server when {
         uri("/")
       } respond {
         text("foo")
@@ -36,8 +35,8 @@ class ResponseHandlerTest extends FunSpec with BeforeAndAfter with RemoteTestHel
         redirectTo("/")
       }
 
-      theServer running {
-        assert(getPath("/redirect") === "foo")
+      theServer running { uri: URI =>
+        assert(get(uri.resolve("/redirect")) === "foo")
       }
     }
   }
@@ -46,13 +45,13 @@ class ResponseHandlerTest extends FunSpec with BeforeAndAfter with RemoteTestHel
     it("wait for a while") {
       val duration = Duration(1, TimeUnit.SECONDS)
 
-      val theServer = server(port) respond {
+      val theServer = server respond {
         latency(duration)
       }
 
-      theServer running {
+      theServer running { uri: URI =>
         val start = System.currentTimeMillis()
-        getForStatus
+        getForStatus(uri)
         val stop = System.currentTimeMillis()
 
         assert((stop - start) >= duration.toMillis)
@@ -62,66 +61,66 @@ class ResponseHandlerTest extends FunSpec with BeforeAndAfter with RemoteTestHel
 
   describe("responses") {
     it("send text") {
-      val theServer = server(port) when {
+      val theServer = server when {
         method("get")
       } respond {
         text("get")
       }
 
-      theServer running {
-        assert(getRoot === "get")
+      theServer running { uri: URI =>
+        assert(get(uri) === "get")
       }
     }
 
     it("send headers") {
-      val theServer = server(port) when {
+      val theServer = server when {
         method("get")
       } respond {
         headers("Content-Type" -> "json", "Accept" -> "html")
       }
 
-      theServer running {
-        assert(getForHeader("Content-Type") === "json")
-        assert(getForHeader("Accept") === "html")
+      theServer running { uri: URI =>
+        assert(getForHeader(uri, "Content-Type") === "json")
+        assert(getForHeader(uri, "Accept") === "html")
       }
     }
 
     it("send content in seq") {
-      val theServer = server(port) when {
+      val theServer = server when {
         method("get")
       } respond {
         seq("foo", "bar", "baz")
       }
 
-      theServer running {
-        assert(getRoot === "foo")
-        assert(getRoot === "bar")
-        assert(getRoot === "baz")
+      theServer running { uri: URI =>
+        assert(get(uri) === "foo")
+        assert(get(uri) === "bar")
+        assert(get(uri) === "baz")
       }
     }
 
     it("send multi response handler") {
-      val theServer = server(port) when {
+      val theServer = server when {
         method("get")
       } respond {
         status(201) and text("hello")
       }
 
-      theServer running {
-        assert(getForStatus === 201)
-        assert(getRoot === "hello")
+      theServer running { uri: URI =>
+        assert(getForStatus(uri) === 201)
+        assert(get(uri) === "hello")
       }
     }
 
     it("send version") {
-      val theServer = server(port) when {
+      val theServer = server when {
         method("get")
       } respond {
         version("HTTP/1.0")
       }
 
-      theServer running {
-        val version = getForVersion
+      theServer running { uri: URI =>
+        val version = getForVersion(uri)
 
         assert(version.getMajor === 1)
         assert(version.getMinor === 0)

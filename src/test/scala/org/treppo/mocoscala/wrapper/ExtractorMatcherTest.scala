@@ -7,7 +7,7 @@ import org.scalatest.Matchers._
 
 class ExtractorMatcherTest extends FlatSpec {
   val extractor: PlainExtractor = new PlainExtractor("hello world")
-  val matcher: ExtractorMatcher = new ExtractorMatcher(extractor)
+  val matcher: ExtractorMatcher = ExtractorMatcher(extractor)
 
   "a extractor matcher" should "be able to do exact match" in {
     (matcher === "hello") shouldBe a[EqRequestMatcher[_]]

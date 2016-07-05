@@ -18,19 +18,22 @@ libraryDependencies += "org.treppo" %% "moco-scala" % "0.5.2" % Test
 // Import dependencies
 import org.treppo.mocoscala.dsl.Moco._
 
-// Create server
+// Create server with port
 val theServer = server(8080) when { uri("/hello") } respond { status(200) }
 
+// Create server with random port
+val theServer = server when { uri("/hello") } respond { status(200) }
+
 // Running server and test your stuff
-theServer running  {
-  assert(SomeHttpClient().url("http://localhost:8080").get.status === 200)
+theServer running  { uri: URI =>
+  assert(SomeHttpClient().url(uri).get.status === 200)
 }
 ```
 
 ## Documentation
 Detailed feature documentation can be found in the [doc/api.md](doc/api.md)
 
-Also, please refer to [functional tests](https://github.com/treppo/moco-scala/tree/master/src/test/scala/features).
+Also, please refer to [functional tests](https://github.com/treppo/moco-scala/tree/master/src/test/scala/org.treppo.mocoscala.features).
 
 ## Contribution:
 Questions, suggestions or pull requests are more than welcome in the Issues section.
