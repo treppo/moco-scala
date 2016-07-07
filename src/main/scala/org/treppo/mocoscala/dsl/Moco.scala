@@ -56,7 +56,7 @@ object Moco {
 
   def context(context: String): MocoConfig[_] = new MocoContextConfig(context)
 
-  def server(port: Int): Moco = Moco(port)
+  def server(port: Int): Moco = Moco(Some(port))
 
   def server: Moco = Moco()
 
@@ -134,13 +134,20 @@ object Moco {
   def post(url: String, content: ContentResource) = JMoco.post(url, content)
 }
 
-case class Moco(port: Int = RandomPort.get,
+private[mocoscala]
+case class Moco(maybePort: Option[Int] = None,
                 triggers: List[MocoEventTrigger] = List(),
                 confs: Seq[MocoConfig[_]] = Seq(),
                 rules: List[Rule] = List()) {
 
-  def running[T](testFun: => T): T = withServer(testFun)
-  def running[T](testFun: URI => T): T = withServer(testFun(new URI(s"http://localhost:$port")))
+  lazy val server =
+    maybePort
+      .map { port => JMoco.httpServer(port, confs: _*).asInstanceOf[ActualHttpServer] }
+      .getOrElse { JMoco.httpServer(confs: _*).asInstanceOf[ActualHttpServer]}
+
+  def running[T](testFun: => T): T = withRunningServer(testFun)
+
+  def running[T](testFun: URI => T): T = withRunningServer(testFun(new URI(s"http://localhost:${server.port()}")))
 
   def when(matcher: RequestMatcher): PartialRule = new PartialRule(matcher, this)
 
@@ -152,7 +159,7 @@ case class Moco(port: Int = RandomPort.get,
 
   def record(rule: Rule): Moco = copy(rules = rule :: rules)
 
-  private def withServer[T](block: => T): T = {
+  private def withRunningServer[T](block: => T): T = {
     val theServer = new MocoHttpServer(replay)
     theServer.start()
     try {
@@ -163,10 +170,6 @@ case class Moco(port: Int = RandomPort.get,
   }
 
   private def replay: ActualHttpServer = {
-    val server =
-      if (confs.isEmpty) JMoco.httpServer(port).asInstanceOf[ActualHttpServer]
-      else JMoco.httpServer(port, confs: _*).asInstanceOf[ActualHttpServer]
-
     rules.foreach {
       case Rule(Some(matcher), handler) => server.request(matcher).response(handler)
       case Rule(None, handler) => server.response(handler)
@@ -176,5 +179,4 @@ case class Moco(port: Int = RandomPort.get,
 
     server
   }
-
 }
